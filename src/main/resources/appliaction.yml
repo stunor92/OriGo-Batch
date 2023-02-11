@@ -1,0 +1,17 @@
+logging:
+  pattern:
+    console: "%d %-5level %logger : %msg%n"
+  level:
+    root: ERROR
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - loggers
+          - metrics
+  endpoint:
+    loggers:
+      enabled: true
+    metrics:
+      enabled: true
