@@ -15,3 +15,12 @@ management:
       enabled: true
     metrics:
       enabled: true
+---
+spring:
+  config:
+    acivate:
+      on-profile: staging
+origo:
+  config:
+    tables:
+      eventor: Eventor-m4hygpnfanahrmhbvxw3i4jc2a-staging
