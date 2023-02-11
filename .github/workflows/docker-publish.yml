@@ -50,7 +50,6 @@ jobs:
         with:
           java-version: '17'
           distribution: 'amazoncorretto'
-        cache: maven
         
       - name: Build with Maven
         run: mvn clean deploy -u
