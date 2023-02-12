@@ -34,7 +34,7 @@ public class Application {
                 log.info("Start update organisations in {}.", eventor.getName());
                 try {
                     List<Organisation> organisations = eventorService.getOrganisations(eventor.getBaseUrl(), eventor.getApiKey()).getOrganisation();
-                    log.info("Fond {} organisations in {}.", organisations.size(), eventor.getName());
+                    log.info("Found {} organisations in {}.", organisations.size(), eventor.getName());
                 } catch (EventorApiException e) {
                     e.printStackTrace();
                 }
