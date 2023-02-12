@@ -2,7 +2,7 @@ package no.stunor.origo.batch.services;
 
 
 import lombok.extern.slf4j.Slf4j;
-import no.stunor.origo.batch.model.DynamoDB.Eventor;
+import no.stunor.origo.batch.model.dynamoDB.Eventor;
 
 import java.util.List;
 
@@ -32,6 +32,4 @@ public class DynamoDBService {
         log.info("Found {} eventor in DynamoDB.", eventorList.size());
         return eventorList;
     }
-
-    
 }
