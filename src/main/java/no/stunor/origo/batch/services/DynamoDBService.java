@@ -4,6 +4,7 @@ package no.stunor.origo.batch.services;
 import lombok.extern.slf4j.Slf4j;
 import no.stunor.origo.batch.model.dynamoDb.Eventor;
 import no.stunor.origo.batch.model.dynamoDb.Organisation;
+import no.stunor.origo.batch.model.dynamoDb.Region;
 
 import java.util.List;
 
@@ -37,6 +38,15 @@ public class DynamoDbService {
         return eventorList;
     }
 
+    public List<Region> getRegionList(){
+        log.info("Start to fecth all regions.");
+        DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+
+        List<Region> regions = dynamoDBMapper.scan(Region.class, scanExpression);
+        log.info("Found {} regions in DynamoDB.", regions.size());
+        return regions;
+    }
+
     public List<Organisation> getOrganisationList(){
         log.info("Start to fecth all organisatopns.");
         DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
@@ -48,5 +58,9 @@ public class DynamoDbService {
 
     public void updateOrganisation(Organisation organisation){
         dynamoDBMapper.save(organisation);
+    }
+
+    public void updateRegion(Region region){
+        dynamoDBMapper.save(region);
     }
 }
