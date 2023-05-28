@@ -2,7 +2,7 @@ logging:
   pattern:
     console: "%d %-5level %logger : %msg%n"
   level:
-    root: ERROR
+    root: info
 management:
   endpoints:
     web:
@@ -15,12 +15,20 @@ management:
       enabled: true
     metrics:
       enabled: true
+origo:
+  config:
+    tables:
+      eventor: Eventor-igq2qtlqone6hp26nexxeqgp7e-staging
+      organisation: Organisation-igq2qtlqone6hp26nexxeqgp7e-staging
 ---
 spring:
   config:
     acivate:
-      on-profile: staging
+      on-profile: prod
 origo:
   config:
     tables:
-      eventor: Eventor-m4hygpnfanahrmhbvxw3i4jc2a-staging
+      eventor: 
+
+
+

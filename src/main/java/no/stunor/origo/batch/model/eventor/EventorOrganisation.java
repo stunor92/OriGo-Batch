@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "Organisation")
-public class Organisation {
+public class EventorOrganisation {
     @XmlElement(name = "OrganisationId")
     private String organisationId;
 
@@ -32,13 +32,20 @@ public class Organisation {
     @XmlElement(name = "ModifyDate")
     private TimeDate modifyDate;
 
+
+    @XmlElement(name = "Address")
+    private Address address;
+
+    @XmlElement(name = "Tele")
+    private Tele tele;
+
     @XmlElement(name = "OrganisationStatusId")
     private String organisationStatusId;
 
     @XmlElement(name = "ParentOrganisation")
     private ParentOrganisation parentOrganisation;
 
-    public Organisation() {
+    public EventorOrganisation() {
     }
 
     public String getOrganisationId() {
@@ -80,4 +87,14 @@ public class Organisation {
     public ParentOrganisation getParentOrganisation() {
         return parentOrganisation;
     }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public Tele getTele() {
+        return tele;
+    }
+
+    
 }

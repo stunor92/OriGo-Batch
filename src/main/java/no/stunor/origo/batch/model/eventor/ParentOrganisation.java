@@ -10,4 +10,10 @@ public class ParentOrganisation {
 
     public ParentOrganisation() {
     }
+
+    public String getOrganisationId() {
+        return organisationId;
+    }
+
+    
 }

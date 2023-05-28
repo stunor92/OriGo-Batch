@@ -9,12 +9,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "OrganisationList")
 public class OrganisationList {
     @XmlElement(name = "Organisation")
-    private List<Organisation> organisation = new ArrayList<>();
+    private List<EventorOrganisation> organisation = new ArrayList<>();
 
     public OrganisationList() {
     }
 
-    public List<Organisation> getOrganisation() {
+    public List<EventorOrganisation> getOrganisation() {
         return organisation;
     }
     
