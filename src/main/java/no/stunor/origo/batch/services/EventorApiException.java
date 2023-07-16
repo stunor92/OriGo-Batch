@@ -1,15 +1,17 @@
 package no.stunor.origo.batch.services;
 
+import org.springframework.http.HttpStatusCode;
+
 public class EventorApiException extends Throwable {
-    int statusCode;
+    HttpStatusCode statusCode;
     String statusText;
 
-    public EventorApiException(int statusCode, String statusText) {
+    public EventorApiException(HttpStatusCode statusCode, String statusText) {
         this.statusCode = statusCode;
         this.statusText = statusText;
     }
 
-    public int getStatusCode() {
+    public HttpStatusCode getStatusCode() {
         return statusCode;
     }
 

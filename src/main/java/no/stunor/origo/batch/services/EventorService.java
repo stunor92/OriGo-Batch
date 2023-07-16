@@ -41,7 +41,7 @@ public class EventorService {
             );
             return response.getBody();
         } catch (HttpClientErrorException e){
-            throw new EventorApiException(e.getRawStatusCode(), e.getStatusText());
+            throw new EventorApiException(e.getStatusCode(), e.getStatusText());
         }
     }
 }
