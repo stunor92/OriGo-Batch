@@ -3,10 +3,9 @@ package no.stunor.origo.batch;
 import lombok.extern.slf4j.Slf4j;
 import no.stunor.origo.batch.converter.OrganisationConverter;
 import no.stunor.origo.batch.converter.RegionConverter;
-import no.stunor.origo.batch.model.dynamoDb.Eventor;
-import no.stunor.origo.batch.model.dynamoDb.Organisation;
-import no.stunor.origo.batch.model.dynamoDb.Region;
-import no.stunor.origo.batch.model.eventor.EventorOrganisation;
+import no.stunor.origo.batch.model.Eventor;
+import no.stunor.origo.batch.model.Organisation;
+import no.stunor.origo.batch.model.Region;
 import no.stunor.origo.batch.services.DynamoDbService;
 import no.stunor.origo.batch.services.EventorApiException;
 import no.stunor.origo.batch.services.EventorService;
@@ -41,7 +40,7 @@ public class Application {
             
             for(Eventor eventor :eventorList){
                 try {
-                    List<EventorOrganisation> eventorOrganisations = eventorService.getOrganisations(eventor.getBaseUrl(), eventor.getApiKey()).getOrganisation();
+                    List<org.iof.eventor.Organisation> eventorOrganisations = eventorService.getOrganisations(eventor.getBaseUrl(), eventor.getApiKey()).getOrganisation();
                     log.info("Found {} organisations in {}.", eventorOrganisations.size(), eventor.getName());
 
                     log.info("Start update regions in {}.", eventor.getName());
@@ -83,7 +82,7 @@ public class Application {
                     List<Organisation> organisations = OrganisationConverter.convertOrganisations(eventorOrganisations, eventor, regions);
                     for(Organisation o : organisations){
                         for(Organisation o1 : existingOrganisations){
-                            if(o.getOrganisationId().equals(o1.getOrganisationId()) && o.getEventorId().equals(o1.getEventorId())){
+                            if(o.getEventorNumber().equals(o1.getEventorNumber()) && o.getEventorId().equals(o1.getEventorId())){
                                 o.setId(o1.getId());
                                 o.setCreatedAt(o1.getCreatedAt());
                                 o.setVersion(o1.getVersion()+1);

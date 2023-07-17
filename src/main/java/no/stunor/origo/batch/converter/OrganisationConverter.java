@@ -6,31 +6,30 @@ import java.util.List;
 import org.joda.time.Instant;
 
 import lombok.extern.slf4j.Slf4j;
-import no.stunor.origo.batch.model.dynamoDb.Eventor;
-import no.stunor.origo.batch.model.dynamoDb.Organisation;
-import no.stunor.origo.batch.model.dynamoDb.Region;
-import no.stunor.origo.batch.model.eventor.EventorOrganisation;
+import no.stunor.origo.batch.model.Eventor;
+import no.stunor.origo.batch.model.Organisation;
+import no.stunor.origo.batch.model.Region;
 
 @Slf4j
 public class OrganisationConverter {
 
-    public static List<Organisation> convertOrganisations(List<EventorOrganisation> eventorOrganisations, Eventor eventor, List<Region> regions){
+    public static List<Organisation> convertOrganisations(List<org.iof.eventor.Organisation> eventorOrganisations, Eventor eventor, List<Region> regions){
         log.info("Start to convert organisations");
         List<Organisation> organisations = new ArrayList<>();
-        for(EventorOrganisation eventorOrganisation : eventorOrganisations){
+        for(org.iof.eventor.Organisation eventorOrganisation : eventorOrganisations){
             organisations.add(convertOrganisation(eventorOrganisation, eventor, regions));
         }
         log.info("Finish converting organisations");
         return organisations;
     }
     
-    public static Organisation convertOrganisation(EventorOrganisation eventorOrganisation, Eventor eventor, List<Region> regions){
+    public static Organisation convertOrganisation(org.iof.eventor.Organisation eventorOrganisation, Eventor eventor, List<Region> regions){
         return new Organisation(
             null, 
-            eventorOrganisation.getOrganisationId(), 
-            eventorOrganisation.getName(),
-            eventorOrganisation.getAddress() != null ? eventorOrganisation.getAddress().getCareOf() : null,
-            eventorOrganisation.getTele() != null ? eventorOrganisation.getTele().getMailAddress() : null,
+            eventorOrganisation.getOrganisationId().getContent(), 
+            eventorOrganisation.getName().getContent(),
+            eventorOrganisation.getAddress() != null && !eventorOrganisation.getAddress().isEmpty() ? eventorOrganisation.getAddress().get(0).getCareOf() : null,
+            eventorOrganisation.getTele() != null && ! eventorOrganisation.getTele().isEmpty() ? eventorOrganisation.getTele().get(0).getMailAddress() : null,
             convertOrganisationType(eventorOrganisation), 
             eventor.getId(),
             findRegion(eventorOrganisation, eventor, regions), 
@@ -43,9 +42,9 @@ public class OrganisationConverter {
             false);
     }
     
-    public static String convertOrganisationType(EventorOrganisation eventorOrganisation){
+    public static String convertOrganisationType(org.iof.eventor.Organisation eventorOrganisation){
 
-        switch (eventorOrganisation.getOrganisationTypeId()){
+        switch (eventorOrganisation.getOrganisationTypeId().getContent()){
             case "1": return "FEDERATION";
             case "2": return "REGION";
             case "5": return "IOF";
@@ -53,10 +52,10 @@ public class OrganisationConverter {
         }
     }
 
-    public static String findRegion(EventorOrganisation eventorOrganisation, Eventor eventor, List<Region> regions){
+    public static String findRegion(org.iof.eventor.Organisation eventorOrganisation, Eventor eventor, List<Region> regions){
         if(eventorOrganisation.getParentOrganisation() != null && eventorOrganisation.getParentOrganisation().getOrganisationId() != null){
             for (Region region : regions){
-                if(region.getRegionId().equals(eventorOrganisation.getParentOrganisation().getOrganisationId()) && region.getEventorId().equals(eventor.getId())){
+                if(region.getRegionId().equals(eventorOrganisation.getParentOrganisation().getOrganisationId().getContent()) && region.getEventorId().equals(eventor.getId())){
                     return region.getId();
                 }
             }

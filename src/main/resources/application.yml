@@ -3,18 +3,6 @@ logging:
     console: "%d %-5level %logger : %msg%n"
   level:
     root: info
-management:
-  endpoints:
-    web:
-      exposure:
-        include:
-          - loggers
-          - metrics
-  endpoint:
-    loggers:
-      enabled: true
-    metrics:
-      enabled: true
 origo:
   config:
     tables:
