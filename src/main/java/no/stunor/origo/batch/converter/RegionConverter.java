@@ -26,7 +26,7 @@ public class RegionConverter {
 
     public static Region convertRegion(Organisation eventorOrganisation, Eventor eventor){
         return new Region(
-            null, 
+            eventor.getId() + "/" + eventorOrganisation.getOrganisationId().getContent(), 
             eventorOrganisation.getName().getContent(),
             eventorOrganisation.getOrganisationId().getContent(),
             eventor.getId(),

@@ -25,7 +25,7 @@ public class OrganisationConverter {
     
     public static Organisation convertOrganisation(org.iof.eventor.Organisation eventorOrganisation, Eventor eventor, List<Region> regions){
         return new Organisation(
-            null, 
+            eventor.getId() + "/" + eventorOrganisation.getOrganisationId().getContent(), 
             eventorOrganisation.getOrganisationId().getContent(), 
             eventorOrganisation.getName().getContent(),
             eventorOrganisation.getAddress() != null && !eventorOrganisation.getAddress().isEmpty() ? eventorOrganisation.getAddress().get(0).getCareOf() : null,
