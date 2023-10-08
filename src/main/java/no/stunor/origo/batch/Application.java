@@ -48,7 +48,7 @@ public class Application {
 
                     for(Region region: regions){
                         for(Region r : existingRegions){
-                            if(region.getEventorId().equals(r.getEventorId()) && region.getRegionId().equals(r.getRegionId())){
+                            if(region.getEventorId().equals(r.getEventorId()) && region.getOrganisationNumber().equals(r.getOrganisationNumber())){
                                 region.setId(r.getId());
                                 region.setCreatedAt(r.getCreatedAt());
                                 region.setVersion(r.getVersion()+1);
@@ -82,7 +82,7 @@ public class Application {
                     List<Organisation> organisations = OrganisationConverter.convertOrganisations(eventorOrganisations, eventor, regions);
                     for(Organisation o : organisations){
                         for(Organisation o1 : existingOrganisations){
-                            if(o.getEventorNumber().equals(o1.getEventorNumber()) && o.getEventorId().equals(o1.getEventorId())){
+                            if(o.getOrganisationNumber().equals(o1.getOrganisationNumber()) && o.getEventorId().equals(o1.getEventorId())){
                                 o.setId(o1.getId());
                                 o.setCreatedAt(o1.getCreatedAt());
                                 o.setVersion(o1.getVersion()+1);

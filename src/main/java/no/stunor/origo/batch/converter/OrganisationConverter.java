@@ -55,7 +55,7 @@ public class OrganisationConverter {
     public static String findRegion(org.iof.eventor.Organisation eventorOrganisation, Eventor eventor, List<Region> regions){
         if(eventorOrganisation.getParentOrganisation() != null && eventorOrganisation.getParentOrganisation().getOrganisationId() != null){
             for (Region region : regions){
-                if(region.getRegionId().equals(eventorOrganisation.getParentOrganisation().getOrganisationId().getContent()) && region.getEventorId().equals(eventor.getId())){
+                if(region.getOrganisationNumber().equals(eventorOrganisation.getParentOrganisation().getOrganisationId().getContent()) && region.getEventorId().equals(eventor.getId())){
                     return region.getId();
                 }
             }

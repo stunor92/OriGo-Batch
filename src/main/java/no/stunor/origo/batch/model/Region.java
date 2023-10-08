@@ -16,7 +16,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@DynamoDBTable(tableName = "Region-igq2qtlqone6hp26nexxeqgp7e-staging")
+@DynamoDBTable(tableName = "Region")
 public class Region {
 
     @DynamoDBHashKey
@@ -27,7 +27,7 @@ public class Region {
     private String name;
 
     @DynamoDBAttribute
-    private String regionId;
+    private String organisationNumber;
 
     @DynamoDBAttribute
     private String eventorId;

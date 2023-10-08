@@ -16,7 +16,7 @@ import lombok.Setter;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@DynamoDBTable(tableName = "Eventor-igq2qtlqone6hp26nexxeqgp7e-staging")
+@DynamoDBTable(tableName = "Eventor")
 public class Eventor {
 
     @DynamoDBHashKey

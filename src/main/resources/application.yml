@@ -2,21 +2,23 @@ logging:
   pattern:
     console: "%d %-5level %logger : %msg%n"
   level:
-    root: info
-origo:
-  config:
-    tables:
-      eventor: Eventor-igq2qtlqone6hp26nexxeqgp7e-staging
-      organisation: Organisation-igq2qtlqone6hp26nexxeqgp7e-staging
+    root: INFO
+dynamoDB:
+  tables:
+    suffix: -yp442ccvtfembgfxyxrpkjkuni-dev
 ---
 spring:
   config:
-    acivate:
-      on-profile: prod
-origo:
+    activate:
+      on-profile: dev
+dynamoDB:
+  tables:
+    suffix: -yp442ccvtfembgfxyxrpkjkuni-dev
+---
+spring:
   config:
-    tables:
-      eventor: 
-
-
-
+    activate:
+      on-profile: prod
+dynamoDB:
+  tables:
+    suffix: -xff3lzvpmvcrleddozxremzcme-prod
