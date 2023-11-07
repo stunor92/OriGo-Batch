@@ -3,8 +3,6 @@ package no.stunor.origo.batch.converter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joda.time.Instant;
-
 import lombok.extern.slf4j.Slf4j;
 import no.stunor.origo.batch.model.Eventor;
 import no.stunor.origo.batch.model.Organisation;
@@ -25,21 +23,13 @@ public class OrganisationConverter {
     
     public static Organisation convertOrganisation(org.iof.eventor.Organisation eventorOrganisation, Eventor eventor, List<Region> regions){
         return new Organisation(
-            eventor.getId() + "/" + eventorOrganisation.getOrganisationId().getContent(), 
             eventorOrganisation.getOrganisationId().getContent(), 
             eventorOrganisation.getName().getContent(),
             eventorOrganisation.getAddress() != null && !eventorOrganisation.getAddress().isEmpty() ? eventorOrganisation.getAddress().get(0).getCareOf() : null,
             eventorOrganisation.getTele() != null && ! eventorOrganisation.getTele().isEmpty() ? eventorOrganisation.getTele().get(0).getMailAddress() : null,
             convertOrganisationType(eventorOrganisation), 
-            eventor.getId(),
             findRegion(eventorOrganisation, eventor, regions), 
-            eventorOrganisation.getCountry() != null ? eventorOrganisation.getCountry().getAlpha3().getValue() :null,
-            Instant.now().toString(),
-            Instant.now().toString(),
-            Instant.now().getMillis(),
-            1,
-            "Organisation",
-            false);
+            eventorOrganisation.getCountry() != null ? eventorOrganisation.getCountry().getAlpha3().getValue() :null);
     }
     
     public static String convertOrganisationType(org.iof.eventor.Organisation eventorOrganisation){
@@ -55,7 +45,7 @@ public class OrganisationConverter {
     public static String findRegion(org.iof.eventor.Organisation eventorOrganisation, Eventor eventor, List<Region> regions){
         if(eventorOrganisation.getParentOrganisation() != null && eventorOrganisation.getParentOrganisation().getOrganisationId() != null){
             for (Region region : regions){
-                if(region.getOrganisationNumber().equals(eventorOrganisation.getParentOrganisation().getOrganisationId().getContent()) && region.getEventorId().equals(eventor.getId())){
+                if(region.getId().equals(eventorOrganisation.getParentOrganisation().getOrganisationId().getContent())){
                     return region.getId();
                 }
             }

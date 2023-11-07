@@ -3,22 +3,16 @@ logging:
     console: "%d %-5level %logger : %msg%n"
   level:
     root: INFO
-dynamoDB:
-  tables:
-    suffix: -yp442ccvtfembgfxyxrpkjkuni-dev
+firestore:
+  credentials:
+    path: origo-5f37d.json
 ---
 spring:
   config:
     activate:
       on-profile: dev
-dynamoDB:
-  tables:
-    suffix: -yp442ccvtfembgfxyxrpkjkuni-dev
 ---
 spring:
   config:
     activate:
       on-profile: prod
-dynamoDB:
-  tables:
-    suffix: -xff3lzvpmvcrleddozxremzcme-prod

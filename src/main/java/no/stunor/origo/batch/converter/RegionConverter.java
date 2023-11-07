@@ -4,37 +4,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.iof.eventor.Organisation;
-import org.joda.time.Instant;
 
 import lombok.extern.slf4j.Slf4j;
-import no.stunor.origo.batch.model.Eventor;
 import no.stunor.origo.batch.model.Region;
 
 @Slf4j
 public class RegionConverter {
 
-    public static List<Region> convertRegions(List<Organisation> eventorOrganisations, Eventor eventor){
+    public static List<Region> convertRegions(List<Organisation> eventorOrganisations){
         log.info("Start to convert regions");
         List<Region> regions = new ArrayList<>();
         for(Organisation eventorOrganisation : eventorOrganisations){
             if(eventorOrganisation.getOrganisationTypeId().getContent().equals("2")){
-                regions.add(convertRegion(eventorOrganisation, eventor));
+                regions.add(convertRegion(eventorOrganisation));
             }
         }
         return regions;
     }
 
-    public static Region convertRegion(Organisation eventorOrganisation, Eventor eventor){
+    public static Region convertRegion(Organisation eventorOrganisation){
         return new Region(
-            eventor.getId() + "/" + eventorOrganisation.getOrganisationId().getContent(), 
-            eventorOrganisation.getName().getContent(),
             eventorOrganisation.getOrganisationId().getContent(),
-            eventor.getId(),
-            false,
-            Instant.now().toString(),
-            Instant.now().toString(),
-            Instant.now().getMillis(),
-            1,
-            "Region");
+            eventorOrganisation.getName().getContent());
     }
 }
