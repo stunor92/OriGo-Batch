@@ -4,10 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import javax.annotation.Nonnull;
+
 import org.springframework.stereotype.Service;
 
 import com.google.api.core.ApiFuture;
+import com.google.cloud.Timestamp;
 import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
 import com.google.cloud.firestore.QuerySnapshot;
 
@@ -21,7 +25,7 @@ import no.stunor.origo.batch.model.Region;
 public record FirestoreService(Firestore firestore) {    
 
 
-     public List<Eventor> getEventorList() throws InterruptedException, ExecutionException{
+    public List<Eventor> getEventorList() throws InterruptedException, ExecutionException{
         log.info("Start to fetch evnetorList.");
         List<Eventor> eventorList = new ArrayList<>();
 
@@ -33,57 +37,26 @@ public record FirestoreService(Firestore firestore) {
         return eventorList;
     }
 
-        public List<Region> getRegionList(Eventor eventor){
-        log.info("Start to fecth all regions.");
+    public void updateRegion(Region region){
+        firestore.collection("regions").document(region.getId()).set(region);
+    }
 
-        List<Region> regionList = new ArrayList<>();
-       
-        try {
-            ApiFuture<QuerySnapshot> future = firestore.collection("eventors").document(eventor.getId()).collection("regions").get();
-            List<QueryDocumentSnapshot> documents;
-            documents = future.get().getDocuments();
-            for (QueryDocumentSnapshot document : documents) {
-                regionList.add(document.toObject(Region.class));
-            }
-        } catch (Exception e) {
-            log.warn("Problems to fettch regions grom Firestore");
+    public void updateOrganisation(Organisation organisation){
+        firestore.collection("organisations").document(organisation.getId()).set(organisation);
+    }
+
+    public void deleteNotUpdatedRegions(@Nonnull Timestamp deleteLimit) throws InterruptedException, ExecutionException{
+        Query query = firestore.collection("regions").whereLessThan("lastUpdated", deleteLimit);
+        ApiFuture<QuerySnapshot> querySnapshot = query.get();
+        for (QueryDocumentSnapshot document : querySnapshot.get().getDocuments()) {
+            firestore.collection("regions").document(document.getId()).delete();
         }
-        
-        return regionList;
     }
-
-    public List<Organisation> getOrganisationList(Eventor eventor){
-        log.info("Start to fecth all organisatopns.");
-
-        List<Organisation> organisationList = new ArrayList<>();
-
-        try {
-            ApiFuture<QuerySnapshot> future = firestore.collection("eventors").document(eventor.getId()).collection("organisations").get();
-            List<QueryDocumentSnapshot> documents;
-            documents = future.get().getDocuments();
-            for (QueryDocumentSnapshot document : documents) {
-                System.out.println(document.getId() + " => " + document.toObject(Organisation.class));
-                organisationList.add(document.toObject(Organisation.class));
-            }
-        } catch (Exception e) {
-            log.warn("Problems to fettch regions grom Firestore");
+    public void deleteNotUpdatedOrganisation(@Nonnull Timestamp deleteLimit) throws InterruptedException, ExecutionException{
+        Query query = firestore.collection("organisations").whereLessThan("lastUpdated", deleteLimit);
+        ApiFuture<QuerySnapshot> querySnapshot = query.get();
+        for (QueryDocumentSnapshot document : querySnapshot.get().getDocuments()) {
+            firestore.collection("organisations").document(document.getId()).delete();
         }
-        return organisationList;
-    }
-
-    public void updateRegion(Region region, Eventor eventor){
-        firestore.collection("eventors").document(eventor.getId()).collection("regions").document(region.getId()).set(region);
-    }
-
-    public void deleteRegion(Region region, Eventor eventor){
-        firestore.collection("eventors").document(eventor.getId()).collection("regions").document(region.getId()).delete();
-    }
-
-      public void updateOrganisation(Organisation organisation, Eventor eventor){
-        firestore.collection("eventors").document(eventor.getId()).collection("organisations").document(organisation.getId()).set(organisation);
-    }
-
-    public void deleteOrganisation(Organisation organisation, Eventor eventor){
-        firestore.collection("eventors").document(eventor.getId()).collection("organisations").document(organisation.getId()).delete();
     }
 }

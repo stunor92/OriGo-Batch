@@ -5,7 +5,7 @@ logging:
     root: INFO
 firestore:
   credentials:
-    path: origo-5f37d.json
+    path: google-credentials.json
 ---
 spring:
   config:
