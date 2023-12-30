@@ -28,7 +28,7 @@ public record BatchScheduler(
     OrganisationService organisationService) {    
 
 
-    @Scheduled(cron="0 9 0 * * *")
+    @Scheduled(cron="0 0 3 * * *")
     public void sceduleJob() throws InterruptedException, ExecutionException, EventorApiException{
         log.info("Start batch job...");
         Timestamp startTtme = Timestamp.now();
