@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.google.cloud.Timestamp;
+import com.google.cloud.firestore.DocumentReference;
 
 import lombok.extern.slf4j.Slf4j;
 import no.stunor.origo.batch.model.Eventor;
@@ -36,21 +37,23 @@ public record BatchScheduler(
     
         List<Eventor> eventorList = firestoreService.getEventorList();
 
-        for(Eventor eventor :eventorList){
+        for(Eventor eventor : eventorList){
             log.info("Updating {}.", eventor.getName());
+            DocumentReference eventorReference = firestoreService.getEventorRefence(eventor.getId());
 
             List<org.iof.eventor.Organisation> eventorOrganisations = eventorService.getOrganisations(eventor.getBaseUrl(), eventor.getApiKey()).getOrganisation();
             log.info("Found {} organisations in {}.", eventorOrganisations.size(), eventor.getName());
 
-            List<Region>  regions = regionService.updateRegions(eventor, eventorOrganisations);
+            List<Region>  regions = regionService.updateRegions(eventorReference, eventorOrganisations);
 
-            organisationService.updateOerganisations(eventor, eventorOrganisations, regions);
-
-            if(startTtme != null){
-                firestoreService.deleteNotUpdatedOrganisation(startTtme);
-                firestoreService.deleteNotUpdatedRegions(startTtme);
-            }
+            organisationService.updateOerganisations(eventorReference, eventorOrganisations, regions);
         }
+        log.info("Start deleting deleted organisations...");
+
+        if(startTtme != null){
+            firestoreService.deleteNotUpdatedOrganisation(startTtme);
+            firestoreService.deleteNotUpdatedRegions(startTtme);
+        }
+        log.info("Finished deleting deleted organisations.");
     }
-    
 }

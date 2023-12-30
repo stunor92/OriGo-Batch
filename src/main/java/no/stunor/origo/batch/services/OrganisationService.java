@@ -3,14 +3,12 @@ package no.stunor.origo.batch.services;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-import javax.annotation.Nonnull;
-
 import org.springframework.stereotype.Service;
 
 import com.google.cloud.Timestamp;
+import com.google.cloud.firestore.DocumentReference;
 
 import lombok.extern.slf4j.Slf4j;
-import no.stunor.origo.batch.model.Eventor;
 import no.stunor.origo.batch.model.Organisation;
 import no.stunor.origo.batch.model.Region;
     
@@ -19,27 +17,35 @@ import no.stunor.origo.batch.model.Region;
 public record OrganisationService(FirestoreService firestoreService) {    
 
 
-     public void updateOerganisations(Eventor eventor, List<org.iof.eventor.Organisation>  organisations, List<Region> regions) throws InterruptedException, ExecutionException{
-        log.info("Start update organisations in {}.", eventor.getName());
-        for(org.iof.eventor.Organisation organisation : organisations){
-            Organisation newOrganisation = createOrganisation(organisation, eventor, regions);
-            firestoreService.updateOrganisation(newOrganisation);
+     public void updateOerganisations(DocumentReference eventorReference, List<org.iof.eventor.Organisation>  organisations, List<Region> regions) throws InterruptedException, ExecutionException{
+        log.info("Start update organisations...");
+        for(org.iof.eventor.Organisation eventorOrganisation : organisations){
+            String parentOrganisation =  eventorOrganisation.getParentOrganisation() != null && eventorOrganisation.getParentOrganisation().getOrganisationId() != null ? eventorOrganisation.getParentOrganisation().getOrganisationId().getContent() : null;
+            DocumentReference regionReference = firestoreService.getRegionReference(eventorReference, parentOrganisation);
+        
+            Organisation organisation = createOrganisation(eventorOrganisation, eventorReference, regionReference);
+            Organisation exisitingOrganisation = firestoreService.getOrganisation(eventorReference, organisation.getOrganisationNumber());
+            if(exisitingOrganisation == null){
+                firestoreService.createOrganisation(organisation);
+            } else {
+                organisation.setId(exisitingOrganisation.getId());
+                firestoreService.updateOrganisation(organisation);
+            }
         }
-        log.info("Finished update of {} regions in {}.", regions.size(), eventor.getName());
+        log.info("Finished update of {} organisations.", organisations.size());
     }
 
-     private static Organisation createOrganisation(org.iof.eventor.Organisation organisation, Eventor eventor, List<Region> regions){
-        @Nonnull String id = eventor.getId() + "-" + organisation.getOrganisationId().getContent();
+    private static Organisation createOrganisation(org.iof.eventor.Organisation organisation, DocumentReference eventorReference, DocumentReference regionReference){
 
         return new Organisation(
-            id,
+            null,
             organisation.getOrganisationId().getContent(), 
-            eventor.getId(),
+            eventorReference,
             organisation.getName().getContent(),
             organisation.getAddress() != null && !organisation.getAddress().isEmpty() ? organisation.getAddress().get(0).getCareOf() : null,
             organisation.getTele() != null && ! organisation.getTele().isEmpty() ? organisation.getTele().get(0).getMailAddress() : null,
             convertOrganisationType(organisation), 
-            findRegionId(organisation, regions), 
+            regionReference, 
             organisation.getCountry() != null ? organisation.getCountry().getAlpha3().getValue() :null,
             Timestamp.now());
     }
@@ -52,17 +58,5 @@ public record OrganisationService(FirestoreService firestoreService) {
             case "5": return "IOF";
             default:  return "CLUB";
         }
-    }
-
-    public static String findRegionId(org.iof.eventor.Organisation organisation, List<Region> regions){
-        if(organisation.getParentOrganisation() != null && organisation.getParentOrganisation().getOrganisationId() != null){
-            for (Region region : regions){
-                if(region.getOrganisationNumber().equals(organisation.getParentOrganisation().getOrganisationId().getContent())){
-                    return region.getId();
-                }
-            }
-            return null;
-        }
-        return null;
     }
 }
