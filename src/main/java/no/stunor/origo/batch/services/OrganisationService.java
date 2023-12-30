@@ -6,9 +6,9 @@ import java.util.concurrent.ExecutionException;
 import org.springframework.stereotype.Service;
 
 import com.google.cloud.Timestamp;
-import com.google.cloud.firestore.DocumentReference;
 
 import lombok.extern.slf4j.Slf4j;
+import no.stunor.origo.batch.model.Eventor;
 import no.stunor.origo.batch.model.Organisation;
 import no.stunor.origo.batch.model.Region;
     
@@ -16,15 +16,19 @@ import no.stunor.origo.batch.model.Region;
 @Service
 public record OrganisationService(FirestoreService firestoreService) {    
 
-
-     public void updateOerganisations(DocumentReference eventorReference, List<org.iof.eventor.Organisation>  organisations, List<Region> regions) throws InterruptedException, ExecutionException{
+     public void updateOerganisations(Eventor eventor, List<org.iof.eventor.Organisation>  organisations, List<Region> regions) throws InterruptedException, ExecutionException{
         log.info("Start update organisations...");
         for(org.iof.eventor.Organisation eventorOrganisation : organisations){
             String parentOrganisation =  eventorOrganisation.getParentOrganisation() != null && eventorOrganisation.getParentOrganisation().getOrganisationId() != null ? eventorOrganisation.getParentOrganisation().getOrganisationId().getContent() : null;
-            DocumentReference regionReference = firestoreService.getRegionReference(eventorReference, parentOrganisation);
         
-            Organisation organisation = createOrganisation(eventorOrganisation, eventorReference, regionReference);
-            Organisation exisitingOrganisation = firestoreService.getOrganisation(eventorReference, organisation.getOrganisationNumber());
+            Organisation organisation = createOrganisation(eventorOrganisation, eventor);
+            for(Region region : regions){
+                if(region.getOrganisationNumber().equals(parentOrganisation)){
+                    organisation.setRegion(region.getOrganisationNumber());
+                    break;
+                }
+            }
+            Organisation exisitingOrganisation = firestoreService.getOrganisation(eventor, organisation.getOrganisationNumber());
             if(exisitingOrganisation == null){
                 firestoreService.createOrganisation(organisation);
             } else {
@@ -35,17 +39,17 @@ public record OrganisationService(FirestoreService firestoreService) {
         log.info("Finished update of {} organisations.", organisations.size());
     }
 
-    private static Organisation createOrganisation(org.iof.eventor.Organisation organisation, DocumentReference eventorReference, DocumentReference regionReference){
+    private static Organisation createOrganisation(org.iof.eventor.Organisation organisation, Eventor eventor){
 
         return new Organisation(
             null,
             organisation.getOrganisationId().getContent(), 
-            eventorReference,
+            eventor.getId(),
             organisation.getName().getContent(),
             organisation.getAddress() != null && !organisation.getAddress().isEmpty() ? organisation.getAddress().get(0).getCareOf() : null,
             organisation.getTele() != null && ! organisation.getTele().isEmpty() ? organisation.getTele().get(0).getMailAddress() : null,
             convertOrganisationType(organisation), 
-            regionReference, 
+            null, 
             organisation.getCountry() != null ? organisation.getCountry().getAlpha3().getValue() :null,
             Timestamp.now());
     }

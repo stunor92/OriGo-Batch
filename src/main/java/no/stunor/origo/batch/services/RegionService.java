@@ -8,24 +8,24 @@ import org.iof.eventor.Organisation;
 import org.springframework.stereotype.Service;
 
 import com.google.cloud.Timestamp;
-import com.google.cloud.firestore.DocumentReference;
 
 import lombok.extern.slf4j.Slf4j;
+import no.stunor.origo.batch.model.Eventor;
 import no.stunor.origo.batch.model.Region;
     
 @Slf4j
 @Service
 public record RegionService(FirestoreService firestoreService) {  
 
-     public List<Region> updateRegions(DocumentReference eventorReference, List<Organisation>  organisations) throws InterruptedException, ExecutionException{
+     public List<Region> updateRegions(Eventor eventor, List<Organisation>  organisations) throws InterruptedException, ExecutionException{
         log.info("Start update regions...");
         List<Region> regions = new ArrayList<>();
         for(Organisation organisation : organisations){
             if(!organisation.getOrganisationTypeId().getContent().equals("2")){
                 continue;
             }
-            Region region = createRegion(organisation, eventorReference);
-            Region exisitingRegion = firestoreService.getRegion(eventorReference, region.getOrganisationNumber());
+            Region region = createRegion(organisation, eventor);
+            Region exisitingRegion = firestoreService.getRegion(eventor, region.getOrganisationNumber());
             if(exisitingRegion == null){
                 firestoreService.createRegion(region);
             } else {
@@ -39,11 +39,11 @@ public record RegionService(FirestoreService firestoreService) {
         return regions;
     }
 
-    public static Region createRegion(Organisation organisation, DocumentReference eventorReference){
+    public static Region createRegion(Organisation organisation, Eventor eventor){
         return new Region(
             null,
             organisation.getOrganisationId().getContent(),
-            eventorReference,
+            eventor.getId(),
             organisation.getName().getContent(),
             Timestamp.now());
     }

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import com.google.api.core.ApiFuture;
 import com.google.cloud.Timestamp;
-import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
 import com.google.cloud.firestore.Query;
 import com.google.cloud.firestore.QueryDocumentSnapshot;
@@ -25,12 +24,6 @@ import no.stunor.origo.batch.model.Region;
 @Slf4j
 @Service
 public record FirestoreService(Firestore firestore) {   
-    
-    public DocumentReference getEventorRefence(String eventorId) throws InterruptedException, ExecutionException{
-        if (eventorId == null)
-            return null;
-        return firestore.collection("eventors").document(eventorId);
-    }  
 
     public List<Eventor> getEventorList() throws InterruptedException, ExecutionException{
         log.info("Start to fetch evnetorList.");
@@ -44,9 +37,9 @@ public record FirestoreService(Firestore firestore) {
         return eventorList;
     }
 
-     public Organisation getOrganisation(DocumentReference eventorReference, String organisationNumber) throws InterruptedException, ExecutionException{
+     public Organisation getOrganisation(Eventor eventor, String organisationNumber) throws InterruptedException, ExecutionException{
         Query query = firestore.collection("organisations")
-                                .whereEqualTo("eventor", eventorReference)
+                                .whereEqualTo("eventor", eventor.getId())
                                 .whereEqualTo("organisationNumber", organisationNumber);
         ApiFuture<QuerySnapshot> querySnapshot = query.get();
         if(!querySnapshot.get().getDocuments().isEmpty()){
@@ -71,9 +64,9 @@ public record FirestoreService(Firestore firestore) {
         }
     }
 
-    public Region getRegion(DocumentReference eventorReference, String organisationNumber) throws InterruptedException, ExecutionException{
+    public Region getRegion(Eventor eventor, String organisationNumber) throws InterruptedException, ExecutionException{
         Query query = firestore.collection("regions")
-                                .whereEqualTo("eventor", eventorReference)
+                                .whereEqualTo("eventor", eventor.getId())
                                 .whereEqualTo("organisationNumber", organisationNumber);
         ApiFuture<QuerySnapshot> querySnapshot = query.get();
         if(!querySnapshot.get().getDocuments().isEmpty()){
@@ -82,21 +75,6 @@ public record FirestoreService(Firestore firestore) {
         
         return null;
     }
-
-        public DocumentReference getRegionReference(DocumentReference eventorReference, String organisationNumber) throws InterruptedException, ExecutionException{
-            Query query = firestore.collection("regions")
-                                    .whereEqualTo("eventor", eventorReference)
-                                    .whereEqualTo("organisationNumber", organisationNumber);
-            ApiFuture<QuerySnapshot> querySnapshot = query.get();
-            if(!querySnapshot.get().getDocuments().isEmpty()){
-                String regionId = querySnapshot.get().getDocuments().get(0).getId();
-                if (regionId != null) {
-                    return firestore.collection("regions").document(regionId);
-                }
-            }
-            
-            return null;
-        }
 
     public void createRegion(Region region) {
         firestore.collection("regions").add(region);

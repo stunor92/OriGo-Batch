@@ -1,7 +1,6 @@
 package no.stunor.origo.batch.model;
 
 import com.google.cloud.Timestamp;
-import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.annotation.DocumentId;
 
 import lombok.AllArgsConstructor;
@@ -19,7 +18,7 @@ public class Region {
     @DocumentId
     private String id;
     private String organisationNumber;
-    private DocumentReference eventor;
+    private String eventor;
     private String name;
     private Timestamp lastUpdated;
 }

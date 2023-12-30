@@ -8,7 +8,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import com.google.cloud.Timestamp;
-import com.google.cloud.firestore.DocumentReference;
 
 import lombok.extern.slf4j.Slf4j;
 import no.stunor.origo.batch.model.Eventor;
@@ -29,7 +28,7 @@ public record BatchScheduler(
     OrganisationService organisationService) {    
 
 
-    @Scheduled(cron="0 0 3 * * *")
+    @Scheduled(cron="0 9 0 * * *")
     public void sceduleJob() throws InterruptedException, ExecutionException, EventorApiException{
         log.info("Start batch job...");
         Timestamp startTtme = Timestamp.now();
@@ -39,14 +38,13 @@ public record BatchScheduler(
 
         for(Eventor eventor : eventorList){
             log.info("Updating {}.", eventor.getName());
-            DocumentReference eventorReference = firestoreService.getEventorRefence(eventor.getId());
 
             List<org.iof.eventor.Organisation> eventorOrganisations = eventorService.getOrganisations(eventor.getBaseUrl(), eventor.getApiKey()).getOrganisation();
             log.info("Found {} organisations in {}.", eventorOrganisations.size(), eventor.getName());
 
-            List<Region>  regions = regionService.updateRegions(eventorReference, eventorOrganisations);
+            List<Region>  regions = regionService.updateRegions(eventor, eventorOrganisations);
 
-            organisationService.updateOerganisations(eventorReference, eventorOrganisations, regions);
+            organisationService.updateOerganisations(eventor, eventorOrganisations, regions);
         }
         log.info("Start deleting deleted organisations...");
 
