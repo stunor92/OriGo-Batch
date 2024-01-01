@@ -17,7 +17,7 @@ import lombok.Setter;
 public class Organisation {
     @DocumentId
     private String id;
-    private String organisationNumber;
+    private String organisationId;
     private String eventor;
     private String name;
     private String contactPerson;

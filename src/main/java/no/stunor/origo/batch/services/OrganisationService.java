@@ -23,12 +23,12 @@ public record OrganisationService(FirestoreService firestoreService) {
         
             Organisation organisation = createOrganisation(eventorOrganisation, eventor);
             for(Region region : regions){
-                if(region.getOrganisationNumber().equals(parentOrganisation)){
-                    organisation.setRegion(region.getOrganisationNumber());
+                if(region.getOrganisationId().equals(parentOrganisation)){
+                    organisation.setRegion(region.getOrganisationId());
                     break;
                 }
             }
-            Organisation exisitingOrganisation = firestoreService.getOrganisation(eventor, organisation.getOrganisationNumber());
+            Organisation exisitingOrganisation = firestoreService.getOrganisation(eventor, organisation.getOrganisationId());
             if(exisitingOrganisation == null){
                 firestoreService.createOrganisation(organisation);
             } else {

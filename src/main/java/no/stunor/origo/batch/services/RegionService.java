@@ -25,7 +25,7 @@ public record RegionService(FirestoreService firestoreService) {
                 continue;
             }
             Region region = createRegion(organisation, eventor);
-            Region exisitingRegion = firestoreService.getRegion(eventor, region.getOrganisationNumber());
+            Region exisitingRegion = firestoreService.getRegion(eventor, region.getOrganisationId());
             if(exisitingRegion == null){
                 firestoreService.createRegion(region);
             } else {
