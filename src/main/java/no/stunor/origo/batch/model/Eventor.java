@@ -1,7 +1,5 @@
 package no.stunor.origo.batch.model;
 
-import com.google.cloud.firestore.annotation.DocumentId;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,8 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Eventor {
-    @DocumentId
-    private String id;
+    private String eventorId;
     private String name;
     private String federation;
     private String baseUrl;

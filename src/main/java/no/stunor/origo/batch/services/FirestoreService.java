@@ -39,7 +39,7 @@ public record FirestoreService(Firestore firestore) {
 
      public Organisation getOrganisation(Eventor eventor, String organisationNumber) throws InterruptedException, ExecutionException{
         Query query = firestore.collection("organisations")
-                                .whereEqualTo("eventor", eventor.getId())
+                                .whereEqualTo("eventor", eventor.getEventorId())
                                 .whereEqualTo("organisationNumber", organisationNumber);
         ApiFuture<QuerySnapshot> querySnapshot = query.get();
         if(!querySnapshot.get().getDocuments().isEmpty()){
@@ -66,7 +66,7 @@ public record FirestoreService(Firestore firestore) {
 
     public Region getRegion(Eventor eventor, String organisationNumber) throws InterruptedException, ExecutionException{
         Query query = firestore.collection("regions")
-                                .whereEqualTo("eventor", eventor.getId())
+                                .whereEqualTo("eventor", eventor.getEventorId())
                                 .whereEqualTo("organisationNumber", organisationNumber);
         ApiFuture<QuerySnapshot> querySnapshot = query.get();
         if(!querySnapshot.get().getDocuments().isEmpty()){

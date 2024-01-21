@@ -43,7 +43,7 @@ public record RegionService(FirestoreService firestoreService) {
         return new Region(
             null,
             organisation.getOrganisationId().getContent(),
-            eventor.getId(),
+            eventor.getEventorId(),
             organisation.getName().getContent(),
             Timestamp.now());
     }

@@ -44,7 +44,7 @@ public record OrganisationService(FirestoreService firestoreService) {
         return new Organisation(
             null,
             organisation.getOrganisationId().getContent(), 
-            eventor.getId(),
+            eventor.getEventorId(),
             organisation.getName().getContent(),
             organisation.getAddress() != null && !organisation.getAddress().isEmpty() ? organisation.getAddress().get(0).getCareOf() : null,
             organisation.getTele() != null && ! organisation.getTele().isEmpty() ? organisation.getTele().get(0).getMailAddress() : null,
