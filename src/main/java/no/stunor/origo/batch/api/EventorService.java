@@ -1,4 +1,4 @@
-package no.stunor.origo.batch.services;
+package no.stunor.origo.batch.api;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +15,6 @@ import org.springframework.http.converter.xml.Jaxb2RootElementHttpMessageConvert
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-
-
 
 @Service
 public class EventorService {

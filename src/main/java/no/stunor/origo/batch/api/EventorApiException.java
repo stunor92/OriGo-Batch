@@ -1,4 +1,4 @@
-package no.stunor.origo.batch.services;
+package no.stunor.origo.batch.api;
 
 import org.springframework.http.HttpStatusCode;
 

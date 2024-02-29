@@ -1,18 +1,18 @@
 logging:
-  pattern:
-    console: "%d %-5level %logger : %msg%n"
   level:
     root: INFO
-firestore:
-  credentials:
-    path: google-credentials.json
----
-spring:
-  config:
-    activate:
-      on-profile: dev
----
-spring:
-  config:
-    activate:
-      on-profile: prod
+management:
+  endpoints:
+    web:
+      exposure:
+        include: 
+          - loggers
+          - health
+          - metrics
+  endpoint:
+    loggers:
+      enabled: true
+    health:
+      enabled: true
+    metrics:
+      enabled: true

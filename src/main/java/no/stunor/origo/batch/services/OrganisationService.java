@@ -3,21 +3,27 @@ package no.stunor.origo.batch.services;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.google.cloud.Timestamp;
 
 import lombok.extern.slf4j.Slf4j;
+import no.stunor.origo.batch.data.OrganisationRepository;
 import no.stunor.origo.batch.model.Eventor;
 import no.stunor.origo.batch.model.Organisation;
 import no.stunor.origo.batch.model.Region;
     
 @Slf4j
 @Service
-public record OrganisationService(FirestoreService firestoreService) {    
+public class OrganisationService {
+    
+    @Autowired
+    OrganisationRepository organisationRepository;
 
-     public void updateOerganisations(Eventor eventor, List<org.iof.eventor.Organisation>  organisations, List<Region> regions) throws InterruptedException, ExecutionException{
+    public void updateOerganisations(Eventor eventor, List<org.iof.eventor.Organisation>  organisations, List<Region> regions) throws InterruptedException, ExecutionException{
         log.info("Start update organisations...");
+        Timestamp startTtme = Timestamp.now();
         for(org.iof.eventor.Organisation eventorOrganisation : organisations){
             String parentOrganisation =  eventorOrganisation.getParentOrganisation() != null && eventorOrganisation.getParentOrganisation().getOrganisationId() != null ? eventorOrganisation.getParentOrganisation().getOrganisationId().getContent() : null;
         
@@ -28,15 +34,18 @@ public record OrganisationService(FirestoreService firestoreService) {
                     break;
                 }
             }
-            Organisation exisitingOrganisation = firestoreService.getOrganisation(eventor, organisation.getOrganisationId());
+            Organisation exisitingOrganisation = organisationRepository.findByOrganisationIdAndEventor(organisation.getOrganisationId(), eventor.getEventorId()).block();
             if(exisitingOrganisation == null){
-                firestoreService.createOrganisation(organisation);
+                organisationRepository.save(organisation);
             } else {
                 organisation.setId(exisitingOrganisation.getId());
-                firestoreService.updateOrganisation(organisation);
+                organisationRepository.save(organisation);
             }
         }
         log.info("Finished update of {} organisations.", organisations.size());
+        log.info("Start deleting deleted organisations...");
+        organisationRepository.deleteByLastUpdatedBefore(startTtme);
+        log.info("Finished deleting deleted organisations.");
     }
 
     private static Organisation createOrganisation(org.iof.eventor.Organisation organisation, Eventor eventor){
