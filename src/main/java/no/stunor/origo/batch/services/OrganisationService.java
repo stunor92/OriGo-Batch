@@ -23,7 +23,7 @@ public class OrganisationService {
 
     public void updateOerganisations(Eventor eventor, List<org.iof.eventor.Organisation>  organisations, List<Region> regions) throws InterruptedException, ExecutionException{
         log.info("Start update organisations...");
-        Timestamp startTtme = Timestamp.now();
+        //Timestamp startTtme = Timestamp.now();
         for(org.iof.eventor.Organisation eventorOrganisation : organisations){
             String parentOrganisation =  eventorOrganisation.getParentOrganisation() != null && eventorOrganisation.getParentOrganisation().getOrganisationId() != null ? eventorOrganisation.getParentOrganisation().getOrganisationId().getContent() : null;
         
@@ -42,10 +42,8 @@ public class OrganisationService {
                 organisationRepository.save(organisation);
             }
         }
+        //organisationRepository.deleteWithLastUpdatedBefore(startTtme);
         log.info("Finished update of {} organisations.", organisations.size());
-        log.info("Start deleting deleted organisations...");
-        organisationRepository.deleteByLastUpdatedBefore(startTtme);
-        log.info("Finished deleting deleted organisations.");
     }
 
     private static Organisation createOrganisation(org.iof.eventor.Organisation organisation, Eventor eventor){

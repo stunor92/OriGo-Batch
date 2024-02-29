@@ -24,7 +24,7 @@ public class RegionService {
 
     public List<Region> updateRegions(Eventor eventor, List<Organisation>  organisations) throws InterruptedException, ExecutionException{
         log.info("Start update regions...");
-        Timestamp startTtme = Timestamp.now();
+        //Timestamp startTtme = Timestamp.now();
 
         List<Region> regions = new ArrayList<>();
         for(Organisation organisation : organisations){
@@ -41,11 +41,9 @@ public class RegionService {
             }
             regions.add(region);
         }
-        log.info("Finished update of {} regions.", regions.size());
         
-        log.info("Start deleting deleted regions.");
-        regionRepository.deleteByLastUpdatedBefore(startTtme);
-        log.info("Finished deleting deleted regions.");
+        //regionRepository.deleteWithLastUpdatedBefore(startTtme);
+        log.info("Finished update of {} regions.", regions.size());
 
         return regions;
     }
