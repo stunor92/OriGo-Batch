@@ -34,10 +34,10 @@ public class RegionService {
             Region region = createRegion(organisation, eventor);
             Region exisitingRegion = regionRepository.findByOrganisationIdAndEventor(region.getOrganisationId(), eventor.getEventorId()).block();
             if(exisitingRegion == null){
-                regionRepository.save(region);
+                regionRepository.save(region).block();
             } else {
                 region.setId(exisitingRegion.getId());
-                regionRepository.save(region);
+                regionRepository.save(region).block();
             }
             regions.add(region);
         }

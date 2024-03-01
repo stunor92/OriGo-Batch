@@ -36,10 +36,10 @@ public class OrganisationService {
             }
             Organisation exisitingOrganisation = organisationRepository.findByOrganisationIdAndEventor(organisation.getOrganisationId(), eventor.getEventorId()).block();
             if(exisitingOrganisation == null){
-                organisationRepository.save(organisation);
+                organisationRepository.save(organisation).block();
             } else {
                 organisation.setId(exisitingOrganisation.getId());
-                organisationRepository.save(organisation);
+                organisationRepository.save(organisation).block();
             }
         }
         //organisationRepository.deleteWithLastUpdatedBefore(startTtme);
