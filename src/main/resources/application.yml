@@ -1,6 +1,9 @@
 logging:
   level:
     root: INFO
+server:
+  servlet:
+    context-path: /rest
 management:
   endpoints:
     web:
