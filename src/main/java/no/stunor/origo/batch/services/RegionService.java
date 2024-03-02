@@ -27,22 +27,20 @@ public class RegionService {
         //Timestamp startTtme = Timestamp.now();
 
         List<Region> regions = new ArrayList<>();
+        List<Region> exisitingRegions = regionRepository.findAll().collectList().block();
+
         for(Organisation organisation : organisations){
             if(!organisation.getOrganisationTypeId().getContent().equals("2")){
                 continue;
             }
             Region region = createRegion(organisation, eventor);
-            Region exisitingRegion = regionRepository.findByOrganisationIdAndEventor(region.getOrganisationId(), eventor.getEventorId()).block();
-            if(exisitingRegion == null){
-                regionRepository.save(region).block();
-            } else {
-                region.setId(exisitingRegion.getId());
-                regionRepository.save(region).block();
+            if(exisitingRegions.contains(region)){
+                Region r = exisitingRegions.get(exisitingRegions.indexOf(region));
+                region.setId(r.getId());
             }
             regions.add(region);
         }
-        
-        //regionRepository.deleteWithLastUpdatedBefore(startTtme);
+        regionRepository.saveAll(regions).blockLast();
         log.info("Finished update of {} regions.", regions.size());
 
         return regions;

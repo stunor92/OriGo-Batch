@@ -28,4 +28,13 @@ public class Organisation {
     private String region;
     private String country;
     private Timestamp lastUpdated;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Organisation) {
+            Organisation org = (Organisation) o;
+            return this.eventor.equals(org.eventor) && this.organisationId.equals(org.organisationId);
+        }
+        return false;
+    }
 }

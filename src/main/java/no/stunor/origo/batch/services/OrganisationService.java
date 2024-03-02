@@ -1,5 +1,6 @@
 package no.stunor.origo.batch.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -21,10 +22,12 @@ public class OrganisationService {
     @Autowired
     OrganisationRepository organisationRepository;
 
-    public void updateOerganisations(Eventor eventor, List<org.iof.eventor.Organisation>  organisations, List<Region> regions) throws InterruptedException, ExecutionException{
+    public void updateOerganisations(Eventor eventor, List<org.iof.eventor.Organisation>  eventorOrganisations, List<Region> regions) throws InterruptedException, ExecutionException{
         log.info("Start update organisations...");
         //Timestamp startTtme = Timestamp.now();
-        for(org.iof.eventor.Organisation eventorOrganisation : organisations){
+        List<Organisation> exisitingOrganisatons = organisationRepository.findAll().collectList().block();
+        List<Organisation> organisations = new ArrayList<>();
+        for(org.iof.eventor.Organisation eventorOrganisation : eventorOrganisations){
             String parentOrganisation =  eventorOrganisation.getParentOrganisation() != null && eventorOrganisation.getParentOrganisation().getOrganisationId() != null ? eventorOrganisation.getParentOrganisation().getOrganisationId().getContent() : null;
         
             Organisation organisation = createOrganisation(eventorOrganisation, eventor);
@@ -34,17 +37,18 @@ public class OrganisationService {
                     break;
                 }
             }
-            Organisation exisitingOrganisation = organisationRepository.findByOrganisationIdAndEventor(organisation.getOrganisationId(), eventor.getEventorId()).block();
-            if(exisitingOrganisation == null){
-                organisationRepository.save(organisation).block();
-            } else {
-                organisation.setId(exisitingOrganisation.getId());
-                organisationRepository.save(organisation).block();
+            if(exisitingOrganisatons.contains(organisation)){
+                Organisation o = exisitingOrganisatons.get(exisitingOrganisatons.indexOf(organisation));
+                organisation.setId(o.getId());
             }
+            organisations.add(organisation);
         }
+        organisationRepository.saveAll(organisations).blockLast();
+
         //organisationRepository.deleteWithLastUpdatedBefore(startTtme);
         log.info("Finished update of {} organisations.", organisations.size());
     }
+
 
     private static Organisation createOrganisation(org.iof.eventor.Organisation organisation, Eventor eventor){
 

@@ -23,4 +23,14 @@ public class Region {
     private String eventor;
     private String name;
     private Timestamp lastUpdated;
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Region) {
+            Region r = (Region) o;
+            return this.eventor.equals(r.eventor) && this.organisationId.equals(r.organisationId);
+        }
+        return false;
+    }
+
 }
