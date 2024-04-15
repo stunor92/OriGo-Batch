@@ -20,7 +20,7 @@ public class Organisation {
     @DocumentId
     private String id;
     private String organisationId;
-    private String eventor;
+    private String eventorId;
     private String name;
     private String contactPerson;
     private String email;
@@ -33,7 +33,7 @@ public class Organisation {
     public boolean equals(Object o) {
         if (o instanceof Organisation) {
             Organisation org = (Organisation) o;
-            return this.eventor.equals(org.eventor) && this.organisationId.equals(org.organisationId);
+            return this.eventorId.equals(org.eventorId) && this.organisationId.equals(org.organisationId);
         }
         return false;
     }

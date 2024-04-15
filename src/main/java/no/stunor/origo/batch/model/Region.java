@@ -20,7 +20,7 @@ public class Region {
     @DocumentId
     private String id;
     private String organisationId;
-    private String eventor;
+    private String eventorId;
     private String name;
     private Timestamp lastUpdated;
 
@@ -28,7 +28,7 @@ public class Region {
     public boolean equals(Object o) {
         if (o instanceof Region) {
             Region r = (Region) o;
-            return this.eventor.equals(r.eventor) && this.organisationId.equals(r.organisationId);
+            return this.eventorId.equals(r.eventorId) && this.organisationId.equals(r.organisationId);
         }
         return false;
     }
