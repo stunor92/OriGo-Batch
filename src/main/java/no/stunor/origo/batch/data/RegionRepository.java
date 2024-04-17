@@ -10,6 +10,6 @@ import reactor.core.publisher.Mono;
 
 @Repository
 public interface RegionRepository extends FirestoreReactiveRepository<Region> {
-    Mono<Region> findByOrganisationIdAndEventorId(String organisationId, String eventorId);
+    Mono<Region> findByRegionIdAndEventorId(String regionId, String eventorId);
     //void deleteWithLastUpdatedBefore(Timestamp timestamp);
 }
