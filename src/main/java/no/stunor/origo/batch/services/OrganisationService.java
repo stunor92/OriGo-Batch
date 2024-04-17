@@ -32,8 +32,8 @@ public class OrganisationService {
         
             Organisation organisation = createOrganisation(eventorOrganisation, eventor);
             for(Region region : regions){
-                if(region.getOrganisationId().equals(parentOrganisation)){
-                    organisation.setRegion(region.getOrganisationId());
+                if(region.getRegionId().equals(parentOrganisation)){
+                    organisation.setRegionId(region.getRegionId());
                     break;
                 }
             }

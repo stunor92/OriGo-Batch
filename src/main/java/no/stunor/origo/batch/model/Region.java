@@ -19,7 +19,7 @@ import lombok.Setter;
 public class Region {
     @DocumentId
     private String id;
-    private String organisationId;
+    private String regionId;
     private String eventorId;
     private String name;
     private Timestamp lastUpdated;
@@ -28,7 +28,7 @@ public class Region {
     public boolean equals(Object o) {
         if (o instanceof Region) {
             Region r = (Region) o;
-            return this.eventorId.equals(r.eventorId) && this.organisationId.equals(r.organisationId);
+            return this.eventorId.equals(r.eventorId) && this.regionId.equals(r.regionId);
         }
         return false;
     }

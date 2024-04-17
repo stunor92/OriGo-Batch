@@ -25,7 +25,7 @@ public class Organisation {
     private String contactPerson;
     private String email;
     private String type;
-    private String region;
+    private String regionId;
     private String country;
     private Timestamp lastUpdated;
 
