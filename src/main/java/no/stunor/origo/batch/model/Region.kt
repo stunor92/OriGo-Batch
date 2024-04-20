@@ -1,36 +1,34 @@
-package no.stunor.origo.batch.model;
+package no.stunor.origo.batch.model
 
-import com.google.cloud.Timestamp;
-import com.google.cloud.firestore.annotation.DocumentId;
-import com.google.cloud.spring.data.firestore.Document;
+import com.google.cloud.Timestamp
+import com.google.cloud.firestore.annotation.DocumentId
+import com.google.cloud.firestore.annotation.ServerTimestamp
+import com.google.cloud.spring.data.firestore.Document
+import java.io.Serializable
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Getter
-@Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Document(collectionName = "regions")
-public class Region {
-    @DocumentId
-    private String id;
-    private String regionId;
-    private String eventorId;
-    private String name;
-    private Timestamp lastUpdated;
-
-    @Override
-    public boolean equals(Object o) {
-        if (o instanceof Region) {
-            Region r = (Region) o;
-            return this.eventorId.equals(r.eventorId) && this.regionId.equals(r.regionId);
+data class Region (
+        @DocumentId
+        var id: String? = null,
+        var eventorId: String = "",
+        var regionId: String = "",
+        var name: String = "",
+        @ServerTimestamp
+        var lastUpdated: Timestamp? = null
+) : Serializable {
+    override fun equals(other: Any?): Boolean {
+        if (other is Region) {
+            return this.eventorId == other.eventorId && (this.regionId == other.regionId)
         }
-        return false;
+        return false
     }
 
+    override fun hashCode(): Int {
+        var result = id?.hashCode() ?: 0
+        result = 31 * result + eventorId.hashCode()
+        result = 31 * result + regionId.hashCode()
+        result = 31 * result + name.hashCode()
+        result = 31 * result + (lastUpdated?.hashCode() ?: 0)
+        return result
+    }
 }

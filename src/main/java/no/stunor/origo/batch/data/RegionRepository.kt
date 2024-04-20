@@ -1,15 +1,12 @@
-package no.stunor.origo.batch.data;
+package no.stunor.origo.batch.data
 
-
-import org.springframework.stereotype.Repository;
-
-import com.google.cloud.spring.data.firestore.FirestoreReactiveRepository;
-
-import no.stunor.origo.batch.model.Region;
-import reactor.core.publisher.Mono;
+import com.google.cloud.spring.data.firestore.FirestoreReactiveRepository
+import no.stunor.origo.batch.model.Region
+import org.springframework.stereotype.Repository
+import reactor.core.publisher.Mono
 
 @Repository
-public interface RegionRepository extends FirestoreReactiveRepository<Region> {
-    Mono<Region> findByRegionIdAndEventorId(String regionId, String eventorId);
+interface RegionRepository : FirestoreReactiveRepository<Region> {
+    fun findByRegionIdAndEventorId(regionId: String, eventorId: String): Mono<Region>
     //void deleteWithLastUpdatedBefore(Timestamp timestamp);
 }

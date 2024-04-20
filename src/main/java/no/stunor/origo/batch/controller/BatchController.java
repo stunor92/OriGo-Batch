@@ -45,7 +45,7 @@ class BatchController {
     
                 List<Region> regions;
                 regions = regionService.updateRegions(eventor, eventorOrganisations);
-                organisationService.updateOerganisations(eventor, eventorOrganisations, regions);
+                organisationService.updateOrganisations(eventor, eventorOrganisations, regions);
 
             } catch (InterruptedException | ExecutionException | EventorApiException e) {
                 log.error("Error updating {}.", eventor.getName(), e);
