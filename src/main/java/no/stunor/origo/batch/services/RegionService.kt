@@ -42,14 +42,13 @@ class RegionService {
         return regions
     }
 
-    companion object {
-        fun createRegion(organisation: Organisation, eventor: Eventor): Region {
-            return Region(
-                    id = null,
-                    regionId = organisation.organisationId.content,
-                    eventorId = eventor.eventorId,
-                    name = organisation.name.content,
-                    lastUpdated = Timestamp.now())
-        }
+    private fun createRegion(organisation: Organisation, eventor: Eventor): Region {
+        return Region(
+                id = null,
+                regionId = organisation.organisationId.content,
+                eventorId = eventor.eventorId,
+                name = organisation.name.content
+        )
     }
 }
+

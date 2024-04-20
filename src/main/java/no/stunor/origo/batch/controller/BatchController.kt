@@ -1,57 +1,54 @@
-package no.stunor.origo.batch.controller;
+package no.stunor.origo.batch.controller
 
-import java.util.List;
-import java.util.concurrent.ExecutionException;
+import no.stunor.origo.batch.api.EventorApiException
+import no.stunor.origo.batch.api.EventorService
+import no.stunor.origo.batch.data.EventorRepository
+import no.stunor.origo.batch.model.Region
+import no.stunor.origo.batch.services.OrganisationService
+import no.stunor.origo.batch.services.RegionService
+import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RestController
+import java.util.concurrent.ExecutionException
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
-
-import lombok.extern.slf4j.Slf4j;
-import no.stunor.origo.batch.api.EventorApiException;
-import no.stunor.origo.batch.api.EventorService;
-import no.stunor.origo.batch.data.EventorRepository;
-import no.stunor.origo.batch.model.Eventor;
-import no.stunor.origo.batch.model.Region;
-import no.stunor.origo.batch.services.OrganisationService;
-import no.stunor.origo.batch.services.RegionService;
-import org.springframework.web.bind.annotation.PostMapping;
-
-
-@Slf4j
 @RestController
-class BatchController {
+internal class BatchController {
+    private val log = LoggerFactory.getLogger(this.javaClass)
+
     @Autowired
-    EventorRepository eventorRepository;
-    @Autowired 
-    EventorService eventorService;
+    private lateinit var eventorRepository: EventorRepository
+
     @Autowired
-    RegionService regionService;
+    private lateinit var eventorService: EventorService
+
     @Autowired
-    OrganisationService organisationService;   
+    private lateinit var regionService: RegionService
+
+    @Autowired
+    private lateinit var organisationService: OrganisationService
 
     @PostMapping("/updateOrganisations")
-    public void uprdateOrigoOrganisations() {
+    fun updateReorganisations() {
+        log.info("Start batch job...")
 
-        log.info("Start batch job...");
-    
-        List<Eventor> eventorList = eventorRepository.findAll().collectList().block();
+        val eventorList = eventorRepository.findAll().collectList().block()?: listOf()
 
-        for(Eventor eventor : eventorList){
+        for (eventor in eventorList) {
             try {
-                log.info("Updating {}.", eventor.getName());
+                log.info("Updating {}.", eventor.name)
 
-                List<org.iof.eventor.Organisation> eventorOrganisations = eventorService.getOrganisations(eventor.getBaseUrl(), eventor.getApiKey()).getOrganisation();
-                log.info("Found {} organisations in {}.", eventorOrganisations.size(), eventor.getName());
-    
-                List<Region> regions;
-                regions = regionService.updateRegions(eventor, eventorOrganisations);
-                organisationService.updateOrganisations(eventor, eventorOrganisations, regions);
-
-            } catch (InterruptedException | ExecutionException | EventorApiException e) {
-                log.error("Error updating {}.", eventor.getName(), e);
+                val eventorOrganisations = eventorService.getOrganisations(eventor.baseUrl, eventor.apiKey).organisation
+                log.info("Found {} organisations in {}.", eventorOrganisations.size, eventor.name)
+                val regions: List<Region> = regionService.updateRegions(eventor, eventorOrganisations)
+                organisationService.updateOrganisations(eventor, eventorOrganisations, regions)
+            } catch (e: InterruptedException) {
+                log.error("Error updating {}.", eventor.name, e)
+            } catch (e: ExecutionException) {
+                log.error("Error updating {}.", eventor.name, e)
+            } catch (e: EventorApiException) {
+                log.error("Error updating {}.", eventor.name, e)
             }
-
         }
-       
     }
 }

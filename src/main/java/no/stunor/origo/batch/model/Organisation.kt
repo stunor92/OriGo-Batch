@@ -20,8 +20,6 @@ data class Organisation (
         var apiKey: String? = null,
         var regionId: String? = null,
         var contactPerson: String? = null,
-        @ServerTimestamp
-        var lastUpdated: Timestamp? = null
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (other is Organisation) {
@@ -40,7 +38,6 @@ data class Organisation (
         result = 31 * result + (apiKey?.hashCode() ?: 0)
         result = 31 * result + (regionId?.hashCode() ?: 0)
         result = 31 * result + (contactPerson?.hashCode() ?: 0)
-        result = 31 * result + (lastUpdated?.hashCode() ?: 0)
         return result
     }
 }

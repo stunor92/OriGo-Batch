@@ -1,6 +1,5 @@
 package no.stunor.origo.batch.services
 
-import com.google.cloud.Timestamp
 import no.stunor.origo.batch.data.OrganisationRepository
 import no.stunor.origo.batch.model.Eventor
 import no.stunor.origo.batch.model.Organisation
@@ -58,12 +57,12 @@ class OrganisationService {
                 type = convertOrganisationType(organisation),
                 apiKey = null,
                 regionId = null,
-                country = organisation.country.alpha3.value,
-                lastUpdated = Timestamp.now())
+                country = organisation.country.alpha3.value
+        )
     }
 
-    fun convertOrganisationType(organisation: org.iof.eventor.Organisation): OrganisationType {
-        return when (organisation.getOrganisationTypeId().getContent()) {
+    private fun convertOrganisationType(organisation: org.iof.eventor.Organisation): OrganisationType {
+        return when (organisation.organisationTypeId.content) {
             "1" -> OrganisationType.FEDERATION
             "2" -> OrganisationType.REGION
             "5" -> OrganisationType.IOF

@@ -13,8 +13,6 @@ data class Region (
         var eventorId: String = "",
         var regionId: String = "",
         var name: String = "",
-        @ServerTimestamp
-        var lastUpdated: Timestamp? = null
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (other is Region) {
@@ -28,7 +26,6 @@ data class Region (
         result = 31 * result + eventorId.hashCode()
         result = 31 * result + regionId.hashCode()
         result = 31 * result + name.hashCode()
-        result = 31 * result + (lastUpdated?.hashCode() ?: 0)
         return result
     }
 }
