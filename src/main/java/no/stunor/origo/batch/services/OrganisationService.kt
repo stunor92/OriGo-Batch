@@ -63,10 +63,10 @@ class OrganisationService {
 
     private fun convertOrganisationType(organisation: org.iof.eventor.Organisation): OrganisationType {
         return when (organisation.organisationTypeId.content) {
-            "1" -> OrganisationType.FEDERATION
-            "2" -> OrganisationType.REGION
+            "1" -> OrganisationType.Federation
+            "2" -> OrganisationType.Region
             "5" -> OrganisationType.IOF
-            else -> OrganisationType.CLUB
+            else -> OrganisationType.Club
         }
     }
 }

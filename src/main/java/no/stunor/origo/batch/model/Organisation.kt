@@ -1,9 +1,6 @@
 package no.stunor.origo.batch.model
 
-import com.fasterxml.jackson.annotation.JsonIgnore
-import com.google.cloud.Timestamp
 import com.google.cloud.firestore.annotation.DocumentId
-import com.google.cloud.firestore.annotation.ServerTimestamp
 import com.google.cloud.spring.data.firestore.Document
 import java.io.Serializable
 
@@ -14,7 +11,7 @@ data class Organisation (
         var organisationId: String = "",
         var eventorId: String = "",
         var name: String = "",
-        var type: OrganisationType = OrganisationType.CLUB,
+        var type: OrganisationType = OrganisationType.Club,
         var country: String = "",
         var email: String? = null,
         var apiKey: String? = null,
@@ -43,5 +40,5 @@ data class Organisation (
 }
 
 enum class OrganisationType {
-    CLUB, REGION, FEDERATION, IOF
+    Club, Region, Federation, IOF
 }
