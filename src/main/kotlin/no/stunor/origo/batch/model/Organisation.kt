@@ -18,7 +18,7 @@ data class Organisation (
     var apiKey: String? = null,
     var regionId: String? = null,
     var contactPerson: String? = null,
-    var lastUpdated: Timestamp
+    var lastUpdated: Timestamp = Timestamp.now()
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (other is Organisation) {
