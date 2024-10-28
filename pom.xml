@@ -109,8 +109,7 @@
 
     <build>
         <sourceDirectory>src/main/kotlin</sourceDirectory>
-        <scriptSourceDirectory>${basedir}/src/main/scripts</scriptSourceDirectory>
-        <testSourceDirectory>target/generated-test-sources/test-annotations</testSourceDirectory>
+        <!--testSourceDirectory>${basedir}/src/test/java</testSourceDirectory-->
         <outputDirectory>${basedir}/target/classes</outputDirectory>
         <testOutputDirectory>${basedir}/target/test-classes</testOutputDirectory>
         <plugins>
