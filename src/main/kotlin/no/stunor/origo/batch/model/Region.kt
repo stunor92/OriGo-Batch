@@ -13,6 +13,7 @@ data class Region (
         var eventorId: String = "",
         var regionId: String = "",
         var name: String = "",
+        var lastUpdated: Timestamp
 ) : Serializable {
     override fun equals(other: Any?): Boolean {
         if (other is Region) {
