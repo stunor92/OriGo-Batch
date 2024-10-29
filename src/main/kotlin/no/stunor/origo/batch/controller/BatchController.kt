@@ -40,8 +40,8 @@ internal class BatchController {
 
                 val eventorOrganisations = eventorService.getOrganisations(eventor.baseUrl, eventor.apiKey).organisation
                 log.info("Found {} organisations in {}.", eventorOrganisations.size, eventor.name)
-                val regions: List<Region> = regionService.updateRegions(eventor, eventorOrganisations)
-                organisationService.updateOrganisations(eventor, eventorOrganisations, regions)
+                regionService.updateRegions(eventor, eventorOrganisations)
+                organisationService.updateOrganisations(eventor, eventorOrganisations)
             } catch (e: InterruptedException) {
                 log.error("Error updating {}.", eventor.name, e)
             } catch (e: ExecutionException) {

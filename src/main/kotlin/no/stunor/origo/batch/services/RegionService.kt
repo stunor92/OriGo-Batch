@@ -21,7 +21,7 @@ class RegionService {
     private lateinit var regionRepository: RegionRepository
 
     @Throws(InterruptedException::class, ExecutionException::class)
-    fun updateRegions(eventor: Eventor, organisations: List<Organisation>): List<Region> {
+    fun updateRegions(eventor: Eventor, organisations: List<Organisation>) {
         log.info("Start update regions...")
         val regions: MutableList<Region> = ArrayList()
         for (organisation in organisations) {
@@ -34,7 +34,7 @@ class RegionService {
         val existingRegions = regionRepository.findAllByEventorId(eventor.eventorId).collectList().block()?: listOf()
         val deletedRegions = existingRegions.filter { !regions.contains(it) }
         regionRepository.deleteAll(deletedRegions).block()
-        log.info("Deleted {} organisations.", deletedRegions.size)
+        log.info("Deleted {} regions.", deletedRegions.size)
         regions.removeAll(deletedRegions)
 
 
@@ -45,15 +45,14 @@ class RegionService {
                 region.isUpdatedAfter(existingRegions.first { it.regionId == region.regionId })) {
                 val r = existingRegions[existingRegions.indexOf(region)]
                 region.id = r.id
-                regions.add(region)
+                updatedRegions.add(region)
             } else if (!existingRegions.contains(region)) {
-                regions.add(region)
+                updatedRegions.add(region)
             }
         }
-        regionRepository.saveAll(regions).blockLast()
-        log.info("Finished update of {} regions.", regions.size)
+        regionRepository.saveAll(updatedRegions).blockLast()
+        log.info("Finished update of {} regions.", updatedRegions.size)
 
-        return regions
     }
 
     private fun createRegion(organisation: Organisation, eventor: Eventor): Region {

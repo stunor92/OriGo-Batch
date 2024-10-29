@@ -2,10 +2,10 @@ package no.stunor.origo.batch.services
 
 import com.google.cloud.Timestamp
 import no.stunor.origo.batch.data.OrganisationRepository
+import no.stunor.origo.batch.data.RegionRepository
 import no.stunor.origo.batch.model.Eventor
 import no.stunor.origo.batch.model.Organisation
 import no.stunor.origo.batch.model.OrganisationType
-import no.stunor.origo.batch.model.Region
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -16,14 +16,18 @@ import java.util.concurrent.ExecutionException
 
 @Service
 class OrganisationService {
+
     private val log = LoggerFactory.getLogger(this.javaClass)
 
     @Autowired
     private lateinit var organisationRepository: OrganisationRepository
+    @Autowired
+    private lateinit var regionRepository: RegionRepository
 
     @Throws(InterruptedException::class, ExecutionException::class)
-    fun updateOrganisations(eventor: Eventor, eventorOrganisations: List<org.iof.eventor.Organisation>, regions: List<Region>) {
+    fun updateOrganisations(eventor: Eventor, eventorOrganisations: List<org.iof.eventor.Organisation>) {
         log.info("Start update organisations...")
+        val regions = regionRepository.findAllByEventorId(eventor.eventorId).collectList().block()?: listOf()
         val organisations: MutableList<Organisation> = ArrayList()
         for (eventorOrganisation in eventorOrganisations) {
             val parentOrganisation: String? =
