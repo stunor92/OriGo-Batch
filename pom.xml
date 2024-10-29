@@ -109,7 +109,7 @@
 
     <build>
         <sourceDirectory>src/main/kotlin</sourceDirectory>
-        <!--testSourceDirectory>${basedir}/src/test/java</testSourceDirectory-->
+        <testSourceDirectory>${basedir}/src/test/kotlin</testSourceDirectory>
         <outputDirectory>${basedir}/target/classes</outputDirectory>
         <testOutputDirectory>${basedir}/target/test-classes</testOutputDirectory>
         <plugins>
@@ -151,7 +151,7 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>${project.build.directory}/generated-sources/jaxb/org/iof/eventor</source>
+                                <source>${project.build.directory}/generated-sources/jaxb/</source>
                             </sources>
                         </configuration>
                     </execution>

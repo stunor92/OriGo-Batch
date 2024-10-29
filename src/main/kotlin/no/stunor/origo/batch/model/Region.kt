@@ -21,6 +21,9 @@ data class Region (
         }
         return false
     }
+    fun isUpdatedAfter(other: Region): Boolean {
+        return this.lastUpdated.toDate().after(other.lastUpdated.toDate())
+    }
 
     override fun hashCode(): Int {
         var result = id?.hashCode() ?: 0

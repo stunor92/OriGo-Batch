@@ -26,6 +26,10 @@ data class Organisation (
         }
         return false
     }
+
+    fun isUpdatedAfter(other: Organisation): Boolean {
+        return this.lastUpdated.toDate().after(other.lastUpdated.toDate())
+    }
     override fun hashCode(): Int {
         var result = id?.hashCode() ?: 0
         result = 31 * result + organisationId.hashCode()

@@ -23,19 +23,26 @@ class RegionService {
     @Throws(InterruptedException::class, ExecutionException::class)
     fun updateRegions(eventor: Eventor, organisations: List<Organisation>): List<Region> {
         log.info("Start update regions...")
-
-        //Timestamp startTtme = Timestamp.now();
         val regions: MutableList<Region> = ArrayList()
-        val existingRegions = regionRepository.findAll().collectList().block()?: listOf()
-        val eventorOrganisationIds = organisations.map { it.organisationId.content }.toSet()
-        val deletedRegions = existingRegions.filter { it.regionId !in eventorOrganisationIds }
-        regionRepository.deleteAll(deletedRegions).block()
         for (organisation in organisations) {
             if (organisation.organisationTypeId.content != "2") {
                 continue
             }
-            val region = createRegion(organisation, eventor)
-            if (existingRegions.contains(region) && existingRegions[existingRegions.indexOf(region)].lastUpdated < region.lastUpdated) {
+            regions.add(createRegion(organisation, eventor))
+        }
+
+        val existingRegions = regionRepository.findAllByEventorId(eventor.eventorId).collectList().block()?: listOf()
+        val deletedRegions = existingRegions.filter { !regions.contains(it) }
+        regionRepository.deleteAll(deletedRegions).block()
+        log.info("Deleted {} organisations.", deletedRegions.size)
+        regions.removeAll(deletedRegions)
+
+
+        val updatedRegions: MutableList<Region> = ArrayList()
+
+        for (region in regions) {
+            if(existingRegions.contains(region) &&
+                region.isUpdatedAfter(existingRegions.first { it.regionId == region.regionId })) {
                 val r = existingRegions[existingRegions.indexOf(region)]
                 region.id = r.id
                 regions.add(region)

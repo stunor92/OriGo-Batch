@@ -24,13 +24,10 @@ class OrganisationService {
     @Throws(InterruptedException::class, ExecutionException::class)
     fun updateOrganisations(eventor: Eventor, eventorOrganisations: List<org.iof.eventor.Organisation>, regions: List<Region>) {
         log.info("Start update organisations...")
-        val existingOrganisations = organisationRepository.findAll().collectList().block()?: listOf()
-        val eventorOrganisationIds = eventorOrganisations.map { it.organisationId.content }.toSet()
-        val deletedOrganisations = existingOrganisations.filter { it.organisationId !in eventorOrganisationIds }
-        organisationRepository.deleteAll(deletedOrganisations).block()
         val organisations: MutableList<Organisation> = ArrayList()
         for (eventorOrganisation in eventorOrganisations) {
-            val parentOrganisation: String? = if (eventorOrganisation.parentOrganisation != null && eventorOrganisation.parentOrganisation.organisationId != null) eventorOrganisation.parentOrganisation.organisationId.content else null
+            val parentOrganisation: String? =
+                if (eventorOrganisation.parentOrganisation != null && eventorOrganisation.parentOrganisation.organisationId != null) eventorOrganisation.parentOrganisation.organisationId.content else null
 
             val organisation = createOrganisation(eventorOrganisation, eventor)
             for (region in regions) {
@@ -39,19 +36,31 @@ class OrganisationService {
                     break
                 }
             }
-            if (existingOrganisations.contains(organisation) && existingOrganisations[existingOrganisations.indexOf(organisation)].lastUpdated < organisation.lastUpdated) {
-                val r = existingOrganisations[existingOrganisations.indexOf(organisation)]
-                organisation.id = r.id
-                organisations.add(organisation)
-            } else if (!existingOrganisations.contains(organisation)) {
-                organisations.add(organisation)
-            }
             organisations.add(organisation)
         }
-        organisationRepository.saveAll(organisations).blockLast()
 
-        //organisationRepository.deleteWithLastUpdatedBefore(startTtme);
-        log.info("Finished update of {} organisations.", organisations.size)
+        val existingOrganisations = organisationRepository.findAllByEventorId(eventor.eventorId).collectList().block()?: listOf()
+        val deletedOrganisations = existingOrganisations.filter { !organisations.contains(it) }
+
+        organisationRepository.deleteAll(deletedOrganisations).block()
+        log.info("Deleted {} organisations.", deletedOrganisations.size)
+
+        organisations.removeAll(deletedOrganisations)
+        val updatedOrganisations: MutableList<Organisation> = ArrayList()
+
+        for (organisation in organisations) {
+            if(existingOrganisations.contains(organisation) &&
+                organisation.isUpdatedAfter(existingOrganisations.first { it.organisationId == organisation.organisationId })) {
+                val o = existingOrganisations.first { it.organisationId == organisation.organisationId }
+                organisation.id = o.id
+                organisation.apiKey = o.apiKey
+                updatedOrganisations.add(organisation)
+            } else if (!existingOrganisations.contains(organisation)) {
+                updatedOrganisations.add(organisation)
+            }
+        }
+        organisationRepository.saveAll(updatedOrganisations).blockLast()
+        log.info("Finished update of {} organisations.", updatedOrganisations.size)
     }
 
 
