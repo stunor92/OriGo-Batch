@@ -1,14 +1,12 @@
 package no.stunor.origo.batch.model
 
-import com.google.cloud.Timestamp
-import com.google.cloud.firestore.annotation.DocumentId
-import com.google.cloud.spring.data.firestore.Document
-import java.io.Serializable
+import org.springframework.data.annotation.Id
+import java.sql.Timestamp
+import java.time.Instant
 
-@Document(collectionName = "organisations")
 data class Organisation (
-    @DocumentId
-    var id: String? = null,
+    @Id
+    var id: Long?,
     var organisationId: String = "",
     var eventorId: String = "",
     var name: String = "",
@@ -18,8 +16,8 @@ data class Organisation (
     var apiKey: String? = null,
     var regionId: String? = null,
     var contactPerson: String? = null,
-    var lastUpdated: Timestamp = Timestamp.now()
-) : Serializable {
+    var lastUpdated: Timestamp = Timestamp.from(Instant.now())
+) {
     override fun equals(other: Any?): Boolean {
         if (other is Organisation) {
             return this.eventorId == other.eventorId && (this.organisationId == other.organisationId)
@@ -28,7 +26,7 @@ data class Organisation (
     }
 
     fun isUpdatedAfter(other: Organisation): Boolean {
-        return this.lastUpdated.toDate().after(other.lastUpdated.toDate())
+        return this.lastUpdated.after(other.lastUpdated)
     }
     override fun hashCode(): Int {
         var result = id?.hashCode() ?: 0

@@ -1,16 +1,13 @@
 package no.stunor.origo.batch.controller
 
-import no.stunor.origo.batch.api.EventorApiException
 import no.stunor.origo.batch.api.EventorService
 import no.stunor.origo.batch.data.EventorRepository
-import no.stunor.origo.batch.model.Region
 import no.stunor.origo.batch.services.OrganisationService
 import no.stunor.origo.batch.services.RegionService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
-import java.util.concurrent.ExecutionException
 
 @RestController
 internal class BatchController {
@@ -28,25 +25,21 @@ internal class BatchController {
     @Autowired
     private lateinit var organisationService: OrganisationService
 
-    @PostMapping("/updateOrganisations")
+    @PostMapping("/update-organisations")
     fun updateReorganisations() {
         log.info("Start batch job...")
 
-        val eventorList = eventorRepository.findAll().collectList().block()?: listOf()
+        val eventorList = eventorRepository.findAll()
 
         for (eventor in eventorList) {
             try {
                 log.info("Updating {}.", eventor.name)
 
-                val eventorOrganisations = eventorService.getOrganisations(eventor.baseUrl, eventor.apiKey).organisation
+                val eventorOrganisations = eventorService.getOrganisations(eventor.baseUrl, eventor.apiKey).organisation.toList()
                 log.info("Found {} organisations in {}.", eventorOrganisations.size, eventor.name)
                 regionService.updateRegions(eventor, eventorOrganisations)
                 organisationService.updateOrganisations(eventor, eventorOrganisations)
-            } catch (e: InterruptedException) {
-                log.error("Error updating {}.", eventor.name, e)
-            } catch (e: ExecutionException) {
-                log.error("Error updating {}.", eventor.name, e)
-            } catch (e: EventorApiException) {
+            } catch(e: Exception) {
                 log.error("Error updating {}.", eventor.name, e)
             }
         }

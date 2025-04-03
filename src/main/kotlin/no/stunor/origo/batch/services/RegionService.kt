@@ -1,6 +1,5 @@
 package no.stunor.origo.batch.services
 
-import com.google.cloud.Timestamp
 import no.stunor.origo.batch.data.RegionRepository
 import no.stunor.origo.batch.model.Eventor
 import no.stunor.origo.batch.model.Region
@@ -8,6 +7,7 @@ import org.iof.eventor.Organisation
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.sql.Timestamp
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -31,9 +31,9 @@ class RegionService {
             regions.add(createRegion(organisation, eventor))
         }
 
-        val existingRegions = regionRepository.findAllByEventorId(eventor.eventorId).collectList().block()?: listOf()
+        val existingRegions = regionRepository.findAllByEventorId(eventor.eventorId)
         val deletedRegions = existingRegions.filter { !regions.contains(it) }
-        regionRepository.deleteAll(deletedRegions).block()
+        regionRepository.deleteAll(deletedRegions)
         log.info("Deleted {} regions.", deletedRegions.size)
         regions.removeAll(deletedRegions)
 
@@ -50,7 +50,7 @@ class RegionService {
                 updatedRegions.add(region)
             }
         }
-        regionRepository.saveAll(updatedRegions).blockLast()
+        regionRepository.saveAll(updatedRegions)
         log.info("Finished update of {} regions.", updatedRegions.size)
 
     }
@@ -81,7 +81,6 @@ class RegionService {
     private fun convertTimestamp(time: org.iof.eventor.ModifyDate, eventor: Eventor): Timestamp {
         val timeString = time.date.content + " " + time.clock.content
         val zdt = parseTimestamp(timeString, eventor)
-        return Timestamp.ofTimeSecondsAndNanos(zdt.toInstant().epochSecond, 0)
-    }
+        return Timestamp.from(zdt.toInstant())    }
 }
 
