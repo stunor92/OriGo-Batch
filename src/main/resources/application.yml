@@ -4,6 +4,12 @@ logging:
 server:
   servlet:
     context-path: /rest
+spring:
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${PGUSER}
+    password: ${DATABASE_URL}
+    driverClassName: org.postgresql.Driver
 management:
   endpoints:
     web:
@@ -14,8 +20,8 @@ management:
           - metrics
   endpoint:
     loggers:
-      enabled: true
+      access: unrestricted
     health:
-      enabled: true
+      access: unrestricted
     metrics:
-      enabled: true
+      access: unrestricted
