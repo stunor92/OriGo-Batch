@@ -1,6 +1,5 @@
 package no.stunor.origo.batch.services
 
-import com.google.cloud.Timestamp
 import no.stunor.origo.batch.data.OrganisationRepository
 import no.stunor.origo.batch.data.RegionRepository
 import no.stunor.origo.batch.model.Eventor
@@ -9,6 +8,7 @@ import no.stunor.origo.batch.model.OrganisationType
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.sql.Timestamp
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -27,7 +27,7 @@ class OrganisationService {
     @Throws(InterruptedException::class, ExecutionException::class)
     fun updateOrganisations(eventor: Eventor, eventorOrganisations: List<org.iof.eventor.Organisation>) {
         log.info("Start update organisations...")
-        val regions = regionRepository.findAllByEventorId(eventor.eventorId).collectList().block()?: listOf()
+        val regions = regionRepository.findAllByEventorId(eventor.eventorId)
         val organisations: MutableList<Organisation> = ArrayList()
         for (eventorOrganisation in eventorOrganisations) {
             val parentOrganisation: String? =
@@ -43,10 +43,10 @@ class OrganisationService {
             organisations.add(organisation)
         }
 
-        val existingOrganisations = organisationRepository.findAllByEventorId(eventor.eventorId).collectList().block()?: listOf()
+        val existingOrganisations = organisationRepository.findAllByEventorId(eventor.eventorId)
         val deletedOrganisations = existingOrganisations.filter { !organisations.contains(it) }
 
-        organisationRepository.deleteAll(deletedOrganisations).block()
+        organisationRepository.deleteAll(deletedOrganisations)
         log.info("Deleted {} organisations.", deletedOrganisations.size)
 
         organisations.removeAll(deletedOrganisations)
@@ -63,7 +63,7 @@ class OrganisationService {
                 updatedOrganisations.add(organisation)
             }
         }
-        organisationRepository.saveAll(updatedOrganisations).blockLast()
+        organisationRepository.saveAll(updatedOrganisations)
         log.info("Finished update of {} organisations.", updatedOrganisations.size)
     }
 
@@ -100,7 +100,7 @@ class OrganisationService {
     private fun convertTimestamp(time: org.iof.eventor.ModifyDate, eventor: Eventor): Timestamp {
         val timeString = time.date.content + " " + time.clock.content
         val zdt = parseTimestamp(timeString, eventor)
-        return Timestamp.ofTimeSecondsAndNanos(zdt.toInstant().epochSecond, 0)
+        return Timestamp.from(zdt.toInstant())
     }
 
 
