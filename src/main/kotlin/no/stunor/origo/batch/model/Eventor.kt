@@ -4,7 +4,6 @@ import org.springframework.data.annotation.Id
 
 data class Eventor (
         @Id
-        var id: Long?,
         var eventorId: String = "",
         var name: String = "",
         var federation: String = "",

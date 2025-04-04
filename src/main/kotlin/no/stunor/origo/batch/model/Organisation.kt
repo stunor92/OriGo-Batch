@@ -6,8 +6,8 @@ import java.time.Instant
 
 data class Organisation (
     @Id
-    var id: Long?,
     var organisationId: String = "",
+    @Id
     var eventorId: String = "",
     var name: String = "",
     var type: OrganisationType = OrganisationType.Club,
@@ -29,8 +29,7 @@ data class Organisation (
         return this.lastUpdated.after(other.lastUpdated)
     }
     override fun hashCode(): Int {
-        var result = id?.hashCode() ?: 0
-        result = 31 * result + organisationId.hashCode()
+        var result = organisationId.hashCode()
         result = 31 * result + eventorId.hashCode()
         result = 31 * result + name.hashCode()
         result = 31 * result + type.hashCode()

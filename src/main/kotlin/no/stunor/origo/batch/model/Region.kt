@@ -6,8 +6,8 @@ import java.time.Instant
 
 data class Region (
         @Id
-        var id: Long?,
         var eventorId: String = "",
+        @Id
         var regionId: String = "",
         var name: String = "",
         var lastUpdated: Timestamp = Timestamp.from(Instant.now())
@@ -23,8 +23,7 @@ data class Region (
     }
 
     override fun hashCode(): Int {
-        var result = id?.hashCode() ?: 0
-        result = 31 * result + eventorId.hashCode()
+        var result = eventorId.hashCode()
         result = 31 * result + regionId.hashCode()
         result = 31 * result + name.hashCode()
         return result
