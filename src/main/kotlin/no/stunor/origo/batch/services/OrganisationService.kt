@@ -8,10 +8,6 @@ import no.stunor.origo.batch.model.OrganisationType
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.sql.Timestamp
-import java.time.ZoneId
-import java.time.ZonedDateTime
-import java.time.format.DateTimeFormatter
 import java.util.concurrent.ExecutionException
 
 @Service
@@ -80,29 +76,9 @@ class OrganisationService {
             apiKey = null,
             regionId = null,
             country = organisation.country.alpha3.value,
-            lastUpdated = convertTimestamp(organisation.modifyDate, eventor)
+            lastUpdated = TimestampConverter.convertTimestamp(organisation.modifyDate, eventor)
         )
     }
-
-    private fun getTimeZone(eventor: Eventor): ZoneId {
-        if (eventor.eventorId == "AUS") {
-            return ZoneId.of("Australia/Sydney")
-        }
-        return ZoneId.of("Europe/Paris")
-    }
-
-    private fun parseTimestamp(time: String, eventor: Eventor): ZonedDateTime {
-        val sdf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-        return ZonedDateTime.parse(time, sdf.withZone(getTimeZone(eventor)))
-
-    }
-
-    private fun convertTimestamp(time: org.iof.eventor.ModifyDate, eventor: Eventor): Timestamp {
-        val timeString = time.date.content + " " + time.clock.content
-        val zdt = parseTimestamp(timeString, eventor)
-        return Timestamp.from(zdt.toInstant())
-    }
-
 
     private fun convertOrganisationType(organisation: org.iof.eventor.Organisation): OrganisationType {
         return when (organisation.organisationTypeId.content) {
