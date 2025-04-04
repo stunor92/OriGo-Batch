@@ -1,14 +1,24 @@
 package no.stunor.origo.batch.model
 
-import org.springframework.data.annotation.Id
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.IdClass
+import java.io.Serializable
 import java.sql.Timestamp
 import java.time.Instant
 
+data class OrganisationId(
+    private val organisationId: String,
+    private val eventorId: String
+) : Serializable{
+    constructor() : this("", "")
+}
+
+@Entity
+@IdClass(OrganisationId::class)
 data class Organisation (
-    @Id
-    var organisationId: String = "",
-    @Id
-    var eventorId: String = "",
+    @Id var organisationId: String = "",
+    @Id var eventorId: String = "",
     var name: String = "",
     var type: OrganisationType = OrganisationType.Club,
     var country: String = "",

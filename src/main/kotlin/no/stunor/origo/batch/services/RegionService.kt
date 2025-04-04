@@ -39,8 +39,6 @@ class RegionService {
         for (region in regions) {
             if(existingRegions.contains(region) &&
                 region.isUpdatedAfter(existingRegions.first { it.regionId == region.regionId })) {
-                val r = existingRegions[existingRegions.indexOf(region)]
-                region.id = r.id
                 updatedRegions.add(region)
             } else if (!existingRegions.contains(region)) {
                 updatedRegions.add(region)
@@ -53,7 +51,6 @@ class RegionService {
 
     private fun createRegion(organisation: Organisation, eventor: Eventor): Region {
         return Region(
-            id = null,
             regionId = organisation.organisationId.content,
             eventorId = eventor.eventorId,
             name = organisation.name.content,

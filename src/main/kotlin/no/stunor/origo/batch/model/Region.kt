@@ -1,9 +1,21 @@
 package no.stunor.origo.batch.model
 
-import org.springframework.data.annotation.Id
+import jakarta.persistence.Entity
+import jakarta.persistence.Id
+import jakarta.persistence.IdClass
+import java.io.Serializable
 import java.sql.Timestamp
 import java.time.Instant
 
+data class RegionId(
+    private val regionId: String,
+    private val eventorId: String
+) : Serializable{
+    constructor() : this("", "")
+}
+
+@Entity
+@IdClass(RegionId::class)
 data class Region (
         @Id
         var eventorId: String = "",

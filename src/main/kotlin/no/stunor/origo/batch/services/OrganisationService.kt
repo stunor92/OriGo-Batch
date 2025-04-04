@@ -52,7 +52,6 @@ class OrganisationService {
             if(existingOrganisations.contains(organisation) &&
                 organisation.isUpdatedAfter(existingOrganisations.first { it.organisationId == organisation.organisationId })) {
                 val o = existingOrganisations.first { it.organisationId == organisation.organisationId }
-                organisation.id = o.id
                 organisation.apiKey = o.apiKey
                 updatedOrganisations.add(organisation)
             } else if (!existingOrganisations.contains(organisation)) {
@@ -66,7 +65,6 @@ class OrganisationService {
 
     private fun createOrganisation(organisation: org.iof.eventor.Organisation, eventor: Eventor): Organisation {
         return Organisation(
-            id = null,
             organisationId = organisation.organisationId.content,
             eventorId = eventor.eventorId,
             name = organisation.name.content,
