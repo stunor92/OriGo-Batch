@@ -31,7 +31,7 @@ public class EventorService {
         restTemplate.setMessageConverters(converters);
     }
 
-    public OrganisationList getOrganisations(String baseUrl, String apiKey) throws EventorApiException {
+    public OrganisationList getOrganisations(String baseUrl, String apiKey) throws EventorApi {
         HttpHeaders headers = new HttpHeaders();
         headers.set("ApiKey", apiKey);
 
@@ -46,7 +46,7 @@ public class EventorService {
             );
             return response.getBody();
         } catch (HttpClientErrorException e){
-            throw new EventorApiException(e.getStatusCode(), e.getStatusText());
+            throw new EventorApi(e.getStatusCode(), e.getStatusText());
         }
     }
 }
