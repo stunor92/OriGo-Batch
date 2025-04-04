@@ -73,7 +73,7 @@ class OrganisationService {
             type = convertOrganisationType(organisation),
             apiKey = null,
             regionId = null,
-            country = organisation.country.alpha3.value,
+            country = if(organisation.country.alpha3.value.length == 3) organisation.country.alpha3.value else eventor.eventorId,
             lastUpdated = TimestampConverter.convertTimestamp(organisation.modifyDate, eventor)
         )
     }

@@ -12,6 +12,9 @@ spring:
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
     driverClassName: org.postgresql.Driver
+    hikari:
+      data-source-properties:
+        stringtype: unspecified
 management:
   endpoints:
     web:

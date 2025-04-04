@@ -1,8 +1,6 @@
 package no.stunor.origo.batch.model
 
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.IdClass
+import jakarta.persistence.*
 import java.io.Serializable
 import java.sql.Timestamp
 import java.time.Instant
@@ -20,7 +18,7 @@ data class Organisation (
     @Id var organisationId: String = "",
     @Id var eventorId: String = "",
     var name: String = "",
-    var type: OrganisationType = OrganisationType.Club,
+    @Enumerated(EnumType.STRING) var type: OrganisationType = OrganisationType.Club,
     var country: String = "",
     var email: String? = null,
     var apiKey: String? = null,
