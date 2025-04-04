@@ -2408,13 +2408,6 @@
       <xs:attribute name="id" type="xs:string" use="required" />
     </xs:complexType>
   </xs:element>
-  <!-- temporarily uncomment to let the xsd.exe tool run without errors -->
-  <!-- remember to remove Name class from Schemas.EventorApi namespace and use Schemas.OlaApi.Name class instead -->
-  <!--<xs:element name="Name">
-    <xs:complexType mixed="true">
-      <xs:attribute name="languageId" type="xs:anySimpleType"/>
-    </xs:complexType>
-  </xs:element>-->
   <xs:element name="ExternalLoginUrl">
     <xs:complexType mixed="true" />
   </xs:element>
