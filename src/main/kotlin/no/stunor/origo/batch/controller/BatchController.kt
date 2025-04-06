@@ -35,7 +35,7 @@ internal class BatchController {
             try {
                 log.info("Updating {}.", eventor.name)
 
-                val eventorOrganisations = eventorService.getOrganisations(eventor.baseUrl, eventor.apiKey).organisation.toList()
+                val eventorOrganisations = eventorService.getOrganisations(eventor.baseUrl, eventor.eventorApiKey).organisation.toList()
                 log.info("Found {} organisations in {}.", eventorOrganisations.size, eventor.name)
                 regionService.updateRegions(eventor, eventorOrganisations)
                 organisationService.updateOrganisations(eventor, eventorOrganisations)

@@ -10,5 +10,5 @@ data class Eventor (
         var name: String = "",
         var federation: String = "",
         var baseUrl: String = "",
-        var apiKey: String = ""
+        var eventorApiKey: String = ""
 )
