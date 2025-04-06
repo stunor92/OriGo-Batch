@@ -21,7 +21,7 @@ data class Organisation (
     @Enumerated(EnumType.STRING) var type: OrganisationType = OrganisationType.Club,
     var country: String = "",
     var email: String? = null,
-    var apiKey: String? = null,
+    var eventorApiKey: String? = null,
     var regionId: String? = null,
     var contactPerson: String? = null,
     var lastUpdated: Timestamp = Timestamp.from(Instant.now())
@@ -43,7 +43,7 @@ data class Organisation (
         result = 31 * result + type.hashCode()
         result = 31 * result + country.hashCode()
         result = 31 * result + (email?.hashCode() ?: 0)
-        result = 31 * result + (apiKey?.hashCode() ?: 0)
+        result = 31 * result + (eventorApiKey?.hashCode() ?: 0)
         result = 31 * result + (regionId?.hashCode() ?: 0)
         result = 31 * result + (contactPerson?.hashCode() ?: 0)
         return result

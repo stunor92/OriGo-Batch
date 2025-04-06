@@ -52,7 +52,7 @@ class OrganisationService {
             if(existingOrganisations.contains(organisation) &&
                 organisation.isUpdatedAfter(existingOrganisations.first { it.organisationId == organisation.organisationId })) {
                 val o = existingOrganisations.first { it.organisationId == organisation.organisationId }
-                organisation.apiKey = o.apiKey
+                organisation.eventorApiKey = o.eventorApiKey
                 updatedOrganisations.add(organisation)
             } else if (!existingOrganisations.contains(organisation)) {
                 updatedOrganisations.add(organisation)
@@ -71,7 +71,7 @@ class OrganisationService {
             contactPerson = if (organisation.getAddress() != null && organisation.address.isNotEmpty()) organisation.address[0].careOf else null,
             email = if (organisation.getTele() != null && organisation.tele.isNotEmpty()) organisation.tele[0].mailAddress else null,
             type = convertOrganisationType(organisation),
-            apiKey = null,
+            eventorApiKey = null,
             regionId = null,
             country = if(organisation.country.alpha3.value.length == 3) organisation.country.alpha3.value else eventor.eventorId,
             lastUpdated = TimestampConverter.convertTimestamp(organisation.modifyDate, eventor)
