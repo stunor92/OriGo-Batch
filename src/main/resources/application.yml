@@ -14,7 +14,7 @@ spring:
     driverClassName: org.postgresql.Driver
     hikari:
       data-source-properties:
-        stringtype: unspecified
+        string type: unspecified
 management:
   endpoints:
     web:

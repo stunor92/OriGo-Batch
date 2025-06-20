@@ -1,16 +1,15 @@
-package no.stunor.origo.batch.controller
+package no.stunor.origo.batch.services
 
 import no.stunor.origo.batch.api.EventorService
 import no.stunor.origo.batch.data.EventorRepository
-import no.stunor.origo.batch.services.OrganisationService
-import no.stunor.origo.batch.services.RegionService
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
 
-@RestController
-internal class BatchController {
+@Service
+internal class BatchService {
     private val log = LoggerFactory.getLogger(this.javaClass)
 
     @Autowired
@@ -25,8 +24,7 @@ internal class BatchController {
     @Autowired
     private lateinit var organisationService: OrganisationService
 
-    @PostMapping("/update-organisations")
-    fun updateReorganisations() {
+    fun updateOrganisations() {
         log.info("Start batch job...")
 
         val eventorList = eventorRepository.findAll()

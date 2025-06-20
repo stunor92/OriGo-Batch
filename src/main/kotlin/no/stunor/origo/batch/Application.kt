@@ -1,13 +1,18 @@
-package no.stunor.origo.batch;
+package no.stunor.origo.batch
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import no.stunor.origo.batch.services.BatchService
+import org.springframework.boot.CommandLineRunner
+import org.springframework.boot.SpringApplication
+import org.springframework.boot.autoconfigure.SpringBootApplication
 
 @SpringBootApplication
-public class Application {
+open class Application private constructor(private val batchService: BatchService) : CommandLineRunner {
 
-    public static void main(String[] args){
-        SpringApplication.run(Application.class, args);
+    override fun run(vararg args: String?) {
+        batchService.updateOrganisations()
     }
+}
 
+fun main(args: Array<String>) {
+    SpringApplication.run(Application::class.java, *args)
 }
