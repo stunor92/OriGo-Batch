@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/stunor92/OriGo-Batch/compare/v2.1.0...v2.1.1) (2025-06-28)
+
+
+### Bug Fixes
+
+* force main to be merged into prod ([eb417c9](https://github.com/stunor92/OriGo-Batch/commit/eb417c9adefaea662465b9d99fa55a7c9ec09897))
+
 ## [2.1.0](https://github.com/stunor92/OriGo-Batch/compare/v2.0.0...v2.1.0) (2025-06-28)
 
 
