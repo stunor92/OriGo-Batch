@@ -42,5 +42,5 @@ jobs:
           git config user.email 41898282+github-actions[bot]@users.noreply.github.com
           git fetch origin prod
           git checkout prod
-          git merge origin/main --no-ff -m "Merge main into prod for release ${{ steps.release.outputs.tag_name }}"
+          git merge origin/main --no-ff --allow-unrelated-histories -m "Merge main into prod for release ${{ steps.release.outputs.tag_name }}"
           git push origin prod
