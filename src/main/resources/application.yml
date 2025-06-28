@@ -1,9 +1,6 @@
 logging:
   level:
     root: INFO
-server:
-  servlet:
-    context-path: /rest
 spring:
   config:
     import: optional:file:.env[.properties]
@@ -15,21 +12,3 @@ spring:
     hikari:
       data-source-properties:
         string type: unspecified
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-  endpoints:
-    web:
-      exposure:
-        include: 
-          - loggers
-          - health
-          - metrics
-  endpoint:
-    loggers:
-      access: unrestricted
-    health:
-      access: unrestricted
-    metrics:
-      access: unrestricted
