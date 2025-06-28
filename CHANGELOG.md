@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.2](https://github.com/stunor92/OriGo-Batch/compare/v2.1.1...v2.1.2) (2025-06-28)
+
+
+### Bug Fixes
+
+* force prod to match main after each release ([102be57](https://github.com/stunor92/OriGo-Batch/commit/102be57dd6b5230fa0b10323a8ca7a8d26e8bdc1))
+
 ## [2.1.1](https://github.com/stunor92/OriGo-Batch/compare/v2.1.0...v2.1.1) (2025-06-28)
 
 
