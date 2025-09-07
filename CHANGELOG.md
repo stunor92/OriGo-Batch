@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.1.3](https://github.com/stunor92/OriGo-Batch/compare/v2.1.2...v2.1.3) (2025-09-07)
+
+
+### Bug Fixes
+
+* Do not specify postges dialect and remove acurator ([d03f7f0](https://github.com/stunor92/OriGo-Batch/commit/d03f7f0ca4f1d0654f00c1f3434d716f67e8cbef))
+* Remove major and minor tagging ([f978b34](https://github.com/stunor92/OriGo-Batch/commit/f978b34a635890c52da520c619d7245583cdba78))
+
 ## [2.1.2](https://github.com/stunor92/OriGo-Batch/compare/v2.1.1...v2.1.2) (2025-06-28)
 
 
