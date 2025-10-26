@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/stunor92/OriGo-Batch/compare/v2.1.3...v2.2.0) (2025-10-26)
+
+
+### Features
+
+* Use distroless base image and fix deploy-pipeline ([#65](https://github.com/stunor92/OriGo-Batch/issues/65)) ([bdcd30d](https://github.com/stunor92/OriGo-Batch/commit/bdcd30dfd4d7cce074c12e779346ae89247cab11))
+
 ## [2.1.3](https://github.com/stunor92/OriGo-Batch/compare/v2.1.2...v2.1.3) (2025-09-07)
 
 
