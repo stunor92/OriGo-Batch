@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.1](https://github.com/stunor92/OriGo-Batch/compare/v2.2.0...v2.2.1) (2025-10-26)
+
+
+### Bug Fixes
+
+* Add hibernate and database properties ([#68](https://github.com/stunor92/OriGo-Batch/issues/68)) ([cd0f7c8](https://github.com/stunor92/OriGo-Batch/commit/cd0f7c8b0cbf9f3a1ace9ded361a5a4c013d315b))
+
 ## [2.2.0](https://github.com/stunor92/OriGo-Batch/compare/v2.1.3...v2.2.0) (2025-10-26)
 
 
