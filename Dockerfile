@@ -1,20 +1,8 @@
-# Use Maven to build the application
-FROM maven:3-eclipse-temurin-25-alpine AS builder
-# Set the working directory
-WORKDIR /app
+FROM eclipse-temurin:21-jdk-jammy AS builder
+WORKDIR /build
+COPY . .
+RUN ./mvnw package -DskipTests
 
-# Copy the pom.xml and source code
-COPY pom.xml .
-COPY src ./src
-
-# Build the application
-RUN mvn package -DskipTests
-
-# Use a lightweight JDK base image for the runtime
-FROM bellsoft/liberica-openjre-alpine:25
-
-# Copy the built jar from the builder stage
-COPY --from=builder /app/target/*.jar /app.jar
-
-# Run the application
-CMD ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app.jar"]
+FROM gcr.io/distroless/java21-debian12
+COPY --from=builder /build/target/*.jar /app.jar
+ENTRYPOINT ["java", "-jar", "/app.jar"]
