@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.3](https://github.com/stunor92/OriGo-Batch/compare/v2.2.2...v2.2.3) (2025-10-26)
+
+
+### Bug Fixes
+
+* Fix artifact name ([#74](https://github.com/stunor92/OriGo-Batch/issues/74)) ([80d40e1](https://github.com/stunor92/OriGo-Batch/commit/80d40e1a7d36a1c53989e58bb7e17c672ee00d64))
+
 ## [2.2.2](https://github.com/stunor92/OriGo-Batch/compare/v2.2.1...v2.2.2) (2025-10-26)
 
 
