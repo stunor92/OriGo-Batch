@@ -12,3 +12,7 @@ spring:
     hikari:
       data-source-properties:
         string type: unspecified
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
