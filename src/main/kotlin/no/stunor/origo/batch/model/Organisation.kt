@@ -22,7 +22,7 @@ data class Organisation (
 ) {
     override fun equals(other: Any?): Boolean {
         if (other is Organisation) {
-            return this.eventorId == other.eventorId && (this.eventorRef == other.eventorId)
+            return this.eventorId == other.eventorId && (this.eventorRef == other.eventorRef)
         }
         return false
     }
