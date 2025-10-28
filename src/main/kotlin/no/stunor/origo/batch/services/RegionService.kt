@@ -19,7 +19,7 @@ class RegionService {
     @Throws(InterruptedException::class, ExecutionException::class)
     fun updateRegions(eventor: Eventor, organisations: List<Organisation>) {
         log.info("Start update regions...")
-        val existingRegions = regionRepository.findAllByEventorId(eventor.eventorId)
+        val existingRegions = regionRepository.findAllByEventorId(eventor.id)
         val existingByRef = existingRegions.associateBy { it.eventorRef }
 
         val incomingRegions = organisations
@@ -29,7 +29,7 @@ class RegionService {
                 val existing = existingByRef[org.organisationId.content]
                 Region(
                     id = existing?.id, // preserve id if exists (update), else null (insert)
-                    eventorId = eventor.eventorId,
+                    eventorId = eventor.id,
                     eventorRef = org.organisationId.content,
                     name = org.name.content,
                     lastUpdated = lastUpdated
