@@ -5,6 +5,6 @@ import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface OrganisationRepository : CrudRepository<Organisation, Int> {
+interface OrganisationRepository : CrudRepository<Organisation, String> {
     fun findAllByEventorId(eventorId: String): List<Organisation>
 }

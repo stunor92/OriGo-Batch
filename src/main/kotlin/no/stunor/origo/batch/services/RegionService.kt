@@ -19,43 +19,33 @@ class RegionService {
     @Throws(InterruptedException::class, ExecutionException::class)
     fun updateRegions(eventor: Eventor, organisations: List<Organisation>) {
         log.info("Start update regions...")
-        val regions: MutableList<Region> = ArrayList()
-        for (organisation in organisations) {
-            if (organisation.organisationTypeId.content != "2") {
-                continue
-            }
-            regions.add(createRegion(organisation, eventor))
-        }
-
         val existingRegions = regionRepository.findAllByEventorId(eventor.eventorId)
-        val deletedRegions = existingRegions.filter { !regions.contains(it) }
-        regionRepository.deleteAll(deletedRegions)
-        log.info("Deleted {} regions.", deletedRegions.size)
-        regions.removeAll(deletedRegions)
+        val existingByRef = existingRegions.associateBy { it.eventorRef }
 
-
-        val updatedRegions: MutableList<Region> = ArrayList()
-
-        for (region in regions) {
-            if(existingRegions.contains(region) &&
-                region.isUpdatedAfter(existingRegions.first { it.regionId == region.regionId })) {
-                updatedRegions.add(region)
-            } else if (!existingRegions.contains(region)) {
-                updatedRegions.add(region)
+        val incomingRegions = organisations
+            .filter { it.organisationTypeId.content == "2" }
+            .map { org ->
+                val lastUpdated = TimestampConverter.convertTimestamp(org.modifyDate, eventor)
+                val existing = existingByRef[org.organisationId.content]
+                Region(
+                    id = existing?.id, // preserve id if exists (update), else null (insert)
+                    eventorId = eventor.eventorId,
+                    eventorRef = org.organisationId.content,
+                    name = org.name.content,
+                    lastUpdated = lastUpdated
+                )
             }
+
+        val incomingRefs = incomingRegions.map { it.eventorRef }.toSet()
+        val deleted = existingRegions.filter { it.eventorRef !in incomingRefs }
+        if (deleted.isNotEmpty()) regionRepository.deleteAll(deleted)
+        log.info("Deleted {} regions.", deleted.size)
+
+        val toPersist = incomingRegions.filter { inc ->
+            val ex = existingByRef[inc.eventorRef]
+            ex == null || inc.isUpdatedAfter(ex)
         }
-        regionRepository.saveAll(updatedRegions)
-        log.info("Finished update of {} regions.", updatedRegions.size)
-
-    }
-
-    private fun createRegion(organisation: Organisation, eventor: Eventor): Region {
-        return Region(
-            regionId = organisation.organisationId.content,
-            eventorId = eventor.eventorId,
-            name = organisation.name.content,
-            lastUpdated = TimestampConverter.convertTimestamp(organisation.modifyDate, eventor)
-        )
+        if (toPersist.isNotEmpty()) regionRepository.saveAll(toPersist)
+        log.info("Finished update of {} regions.", toPersist.size)
     }
 }
-

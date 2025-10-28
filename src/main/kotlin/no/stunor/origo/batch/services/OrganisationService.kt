@@ -31,8 +31,8 @@ class OrganisationService {
 
             val organisation = createOrganisation(eventorOrganisation, eventor)
             for (region in regions) {
-                if (region.regionId == parentOrganisation) {
-                    organisation.regionId = region.regionId
+                if (region.eventorRef == parentOrganisation) {
+                    organisation.regionId = region.id
                     break
                 }
             }
@@ -50,8 +50,8 @@ class OrganisationService {
 
         for (organisation in organisations) {
             if(existingOrganisations.contains(organisation) &&
-                organisation.isUpdatedAfter(existingOrganisations.first { it.organisationId == organisation.organisationId })) {
-                val o = existingOrganisations.first { it.organisationId == organisation.organisationId }
+                organisation.isUpdatedAfter(existingOrganisations.first { it.id == organisation.id })) {
+                val o = existingOrganisations.first { it.id == organisation.id }
                 organisation.eventorApiKey = o.eventorApiKey
                 updatedOrganisations.add(organisation)
             } else if (!existingOrganisations.contains(organisation)) {
@@ -65,7 +65,7 @@ class OrganisationService {
 
     private fun createOrganisation(organisation: org.iof.eventor.Organisation, eventor: Eventor): Organisation {
         return Organisation(
-            organisationId = organisation.organisationId.content,
+            eventorRef = organisation.organisationId.content,
             eventorId = eventor.eventorId,
             name = organisation.name.content,
             contactPerson = if (organisation.getAddress() != null && organisation.address.isNotEmpty()) organisation.address[0].careOf else null,
