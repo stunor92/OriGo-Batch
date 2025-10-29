@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/stunor92/OriGo-Batch/compare/v2.2.3...v3.0.0) (2025-10-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* Use a generated UUID identification to entities ([#82](https://github.com/stunor92/OriGo-Batch/issues/82))
+
+### Features
+
+* Use a generated UUID identification to entities ([#82](https://github.com/stunor92/OriGo-Batch/issues/82)) ([b43eca7](https://github.com/stunor92/OriGo-Batch/commit/b43eca7a6605966ecf507a53a4fff504af846492))
+
 ## [2.2.3](https://github.com/stunor92/OriGo-Batch/compare/v2.2.2...v2.2.3) (2025-10-26)
 
 
