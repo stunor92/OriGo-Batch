@@ -12,7 +12,7 @@ import kotlin.system.exitProcess
 open class Application private constructor(
     private val batchService: BatchService,
     private val applicationContext: ApplicationContext,
-    @Value("\${skip.exit:false}") private val skipExit: Boolean
+    @Value($$"${skip.exit:false}") private val skipExit: Boolean
 ) : CommandLineRunner {
 
     override fun run(vararg args: String?) {
