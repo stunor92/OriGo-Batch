@@ -5,8 +5,7 @@ import jakarta.persistence.Id
 
 @Entity
 data class Eventor (
-        @Id
-        var eventorId: String = "",
+        @Id var id: String = "",
         var name: String = "",
         var federation: String = "",
         var baseUrl: String = "",

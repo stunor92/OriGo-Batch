@@ -23,57 +23,59 @@ class OrganisationService {
     @Throws(InterruptedException::class, ExecutionException::class)
     fun updateOrganisations(eventor: Eventor, eventorOrganisations: List<org.iof.eventor.Organisation>) {
         log.info("Start update organisations...")
-        val regions = regionRepository.findAllByEventorId(eventor.eventorId)
-        val organisations: MutableList<Organisation> = ArrayList()
-        for (eventorOrganisation in eventorOrganisations) {
-            val parentOrganisation: String? =
-                if (eventorOrganisation.parentOrganisation != null && eventorOrganisation.parentOrganisation.organisationId != null) eventorOrganisation.parentOrganisation.organisationId.content else null
+        val regions = regionRepository.findAllByEventorId(eventor.id)
+        val existingOrganisations = organisationRepository.findAllByEventorId(eventor.id)
+        val existingByRef = existingOrganisations.associateBy { it.eventorRef }
 
-            val organisation = createOrganisation(eventorOrganisation, eventor)
-            for (region in regions) {
-                if (region.regionId == parentOrganisation) {
-                    organisation.regionId = region.regionId
-                    break
-                }
+        // Build incoming organisations preserving existing id & api key and assigning regionId
+        val incomingOrganisations = eventorOrganisations.map { eventorOrganisation ->
+            val parentOrganisation: String? = if (eventorOrganisation.parentOrganisation?.organisationId != null) {
+                eventorOrganisation.parentOrganisation.organisationId.content
+            } else null
+            val org = createOrganisation(eventorOrganisation, eventor)
+            // assign regionId by matching parent's ref
+            val matchingRegion = regions.firstOrNull { it.eventorRef == parentOrganisation }
+            org.regionId = matchingRegion?.id
+
+            // preserve id & api key if already exists
+            val existing = existingByRef[org.eventorRef]
+            if (existing != null) {
+                org.id = existing.id
+                org.eventorApiKey = existing.eventorApiKey
             }
-            organisations.add(organisation)
+            org
         }
 
-        val existingOrganisations = organisationRepository.findAllByEventorId(eventor.eventorId)
-        val deletedOrganisations = existingOrganisations.filter { !organisations.contains(it) }
-
-        organisationRepository.deleteAll(deletedOrganisations)
+        val incomingRefs = incomingOrganisations.map { it.eventorRef }.toSet()
+        val deletedOrganisations = existingOrganisations.filter { it.eventorRef !in incomingRefs }
+        if (deletedOrganisations.isNotEmpty()) {
+            organisationRepository.deleteAll(deletedOrganisations)
+        }
         log.info("Deleted {} organisations.", deletedOrganisations.size)
 
-        organisations.removeAll(deletedOrganisations)
-        val updatedOrganisations: MutableList<Organisation> = ArrayList()
-
-        for (organisation in organisations) {
-            if(existingOrganisations.contains(organisation) &&
-                organisation.isUpdatedAfter(existingOrganisations.first { it.organisationId == organisation.organisationId })) {
-                val o = existingOrganisations.first { it.organisationId == organisation.organisationId }
-                organisation.eventorApiKey = o.eventorApiKey
-                updatedOrganisations.add(organisation)
-            } else if (!existingOrganisations.contains(organisation)) {
-                updatedOrganisations.add(organisation)
-            }
+        // Determine which to persist (new or updated by lastUpdated)
+        val toPersist = incomingOrganisations.filter { inc ->
+            val ex = existingByRef[inc.eventorRef]
+            ex == null || inc.isUpdatedAfter(ex)
         }
-        organisationRepository.saveAll(updatedOrganisations)
-        log.info("Finished update of {} organisations.", updatedOrganisations.size)
-    }
 
+        if (toPersist.isNotEmpty()) {
+            organisationRepository.saveAll(toPersist)
+        }
+        log.info("Finished update of {} organisations.", toPersist.size)
+    }
 
     private fun createOrganisation(organisation: org.iof.eventor.Organisation, eventor: Eventor): Organisation {
         return Organisation(
-            organisationId = organisation.organisationId.content,
-            eventorId = eventor.eventorId,
+            eventorRef = organisation.organisationId.content,
+            eventorId = eventor.id,
             name = organisation.name.content,
             contactPerson = if (organisation.getAddress() != null && organisation.address.isNotEmpty()) organisation.address[0].careOf else null,
             email = if (organisation.getTele() != null && organisation.tele.isNotEmpty()) organisation.tele[0].mailAddress else null,
             type = convertOrganisationType(organisation),
             eventorApiKey = null,
             regionId = null,
-            country = if(organisation.country.alpha3.value.length == 3) organisation.country.alpha3.value else eventor.eventorId,
+            country = if (organisation.country.alpha3.value.length == 3) organisation.country.alpha3.value else eventor.id,
             lastUpdated = TimestampConverter.convertTimestamp(organisation.modifyDate, eventor)
         )
     }

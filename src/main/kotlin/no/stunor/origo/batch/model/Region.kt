@@ -1,32 +1,25 @@
 package no.stunor.origo.batch.model
 
 import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
-import jakarta.persistence.IdClass
-import java.io.Serializable
 import java.sql.Timestamp
 import java.time.Instant
-
-data class RegionId(
-    private val regionId: String,
-    private val eventorId: String
-) : Serializable{
-    constructor() : this("", "")
-}
+import java.util.UUID
 
 @Entity
-@IdClass(RegionId::class)
 data class Region (
-        @Id
-        var eventorId: String = "",
-        @Id
-        var regionId: String = "",
-        var name: String = "",
-        var lastUpdated: Timestamp = Timestamp.from(Instant.now())
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    var id: UUID? = null,
+    var eventorId: String = "",
+    var eventorRef: String = "",
+    var name: String = "",
+    var lastUpdated: Timestamp = Timestamp.from(Instant.now())
 ) {
     override fun equals(other: Any?): Boolean {
         if (other is Region) {
-            return this.eventorId == other.eventorId && (this.regionId == other.regionId)
+            return this.eventorId == other.eventorId && (this.eventorRef == other.eventorRef)
         }
         return false
     }
@@ -35,8 +28,8 @@ data class Region (
     }
 
     override fun hashCode(): Int {
-        var result = eventorId.hashCode()
-        result = 31 * result + regionId.hashCode()
+        var result = eventorRef.hashCode()
+        result = 31 * result + eventorId.hashCode()
         result = 31 * result + name.hashCode()
         return result
     }

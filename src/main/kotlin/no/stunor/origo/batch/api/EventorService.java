@@ -19,7 +19,7 @@ import org.springframework.web.client.RestTemplate;
 @Service
 public class EventorService {
 
-    RestTemplate restTemplate;
+    final RestTemplate restTemplate;
     public EventorService() {
         restTemplate = new RestTemplate();
         SimpleClientHttpRequestFactory rf = (SimpleClientHttpRequestFactory) restTemplate.getRequestFactory();

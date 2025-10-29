@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter
 class TimestampConverter {
     companion object {
         private fun getTimeZone(eventor: Eventor): ZoneId {
-            if (eventor.eventorId == "AUS") {
+            if (eventor.id == "AUS") {
                 return ZoneId.of("Australia/Sydney")
             }
             return ZoneId.of("Europe/Paris")
