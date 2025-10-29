@@ -28,7 +28,7 @@ class RegionService {
                 val lastUpdated = TimestampConverter.convertTimestamp(org.modifyDate, eventor)
                 val existing = existingByRef[org.organisationId.content]
                 Region(
-                    id = existing?.id, // preserve id if exists (update), else null (insert)
+                    id = existing?.id, // preserve existing id for updates, null will trigger generation for new inserts
                     eventorId = eventor.id,
                     eventorRef = org.organisationId.content,
                     name = org.name.content,
