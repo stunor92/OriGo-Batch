@@ -193,10 +193,15 @@ See [CHANGELOG.md](CHANGELOG.md) for version history.
 
 ## License
 
-This project is maintained by [stunor92](https://github.com/stunor92).
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Security
+
+For information about security vulnerabilities and how to report them, see our [Security Policy](SECURITY.md).
 
 ## Links
 
 - [GitHub Repository](https://github.com/stunor92/OriGo-Batch)
 - [Issue Tracker](https://github.com/stunor92/OriGo-Batch/issues)
 - [Changelog](CHANGELOG.md)
+- [Security Policy](SECURITY.md)
