@@ -179,11 +179,16 @@ The application uses JPA/Hibernate with PostgreSQL dialect for database operatio
 
 ## Contributing
 
+We welcome contributions! Please follow these steps:
+
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+3. Make your changes following our [Conventional Commits](https://www.conventionalcommits.org/) guidelines
+4. Commit your changes (e.g., `git commit -m 'feat: add some amazing feature'`)
+5. Push to the branch (`git push origin feature/amazing-feature`)
+6. Open a Pull Request with a title following Conventional Commits format
+
+**Important**: All commits and PR titles must follow the [Conventional Commits](https://www.conventionalcommits.org/) specification. See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines and examples.
 
 ## Versioning
 
@@ -203,5 +208,6 @@ For information about security vulnerabilities and how to report them, see our [
 
 - [GitHub Repository](https://github.com/stunor92/OriGo-Batch)
 - [Issue Tracker](https://github.com/stunor92/OriGo-Batch/issues)
+- [Contributing Guidelines](CONTRIBUTING.md)
 - [Changelog](CHANGELOG.md)
 - [Security Policy](SECURITY.md)
