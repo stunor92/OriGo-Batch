@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.1.0](https://github.com/stunor92/OriGo-Batch/compare/v3.0.0...v3.1.0) (2025-11-25)
+
+
+### Features
+
+* enforce conventional commits specification ([#88](https://github.com/stunor92/OriGo-Batch/issues/88)) ([e1419ad](https://github.com/stunor92/OriGo-Batch/commit/e1419ada903fe5a170d644248bf212ee730ab765))
+
 ## [3.0.0](https://github.com/stunor92/OriGo-Batch/compare/v2.2.3...v3.0.0) (2025-10-29)
 
 
